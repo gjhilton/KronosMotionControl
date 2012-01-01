@@ -1,29 +1,92 @@
-#define _USE_SERIAL_CONTROLS
-
+#define _USE_SERIAL
 #define MANUAL_DRIVE_NSTEPS 10
 #define STEPS_PER_ROTATION 200
+
+#include <SPI.h>
+#include <Ethernet.h>
+#include <ArdOSC.h>
 
 #include "RotaryStepper.h"
 
 RotaryStepper motor(STEPS_PER_ROTATION,8,9,10,11);
 
+byte myMac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+byte myIp[]  = { 192, 168, 0, 177 };
+int  serverPort  = 10000;
+OSCServer server;
+
 void setup() {
-#if defined _USE_SERIAL_CONTROLS
+	oscBegin();
+#if defined _USE_SERIAL
 	serialBegin();
 #endif
 }
 
 void loop(){
-#if defined _USE_SERIAL_CONTROLS
+#if defined _USE_SERIAL
 	serialLoop();
 #endif
+}
+
+/*	---------------------------------------------------- 
+	OSC
+	---------------------------------------------------- */
+
+void oscBegin(){
+	Ethernet.begin(myMac ,myIp);
+	server.begin(serverPort);
+	server.addCallback("/ard/fwd",&onOSCForward);
+}
+
+void onOSCForward(OSCMessage *_mes){
+	onForward();
+}
+
+/*	---------------------------------------------------- 
+	COMMAND HANDLERS
+	---------------------------------------------------- */
+
+void onForward(){
+	motor.goRelative(MANUAL_DRIVE_NSTEPS);
+#if defined _USE_SERIAL
+	Serial.print("Going forward by ");
+	printmanualincrement();
+#endif
+}
+
+void onRewind(){
+	motor.goRelative(-MANUAL_DRIVE_NSTEPS);
+#if defined _USE_SERIAL
+	Serial.print("Going backward by ");
+	printmanualincrement();
+#endif
+}
+
+void onSetAtHome(){
+	motor.setAtHome();
+#if defined _USE_SERIAL
+	Serial.println("Setting home to current step");
+	onSerialStatus();
+#endif	
+}
+
+void onGoHome(){
+	motor.goHome();
+#if defined _USE_SERIAL
+	if (motor.homeSet()){
+		Serial.println("Going home");
+		onSerialStatus();
+	} else {
+		Serial.println("Can't go home because it hasn't been set");
+	}
+#endif	
 }
 
 /*	---------------------------------------------------- 
 	SERIAL
 	---------------------------------------------------- */
 
-#if defined _USE_SERIAL_CONTROLS
+#if defined _USE_SERIAL
 void serialBegin(){
 	Serial.begin(9600);
 	while (!Serial) {
@@ -69,53 +132,6 @@ void serialLoop(){
 		Serial.println();
 	}
 }
-#endif
-
-/*	---------------------------------------------------- 
-	COMMAND HANDLERS
-	---------------------------------------------------- */
-
-void onForward(){
-	motor.goRelative(MANUAL_DRIVE_NSTEPS);
-#if defined _USE_SERIAL_CONTROLS
-	Serial.print("Going forward by ");
-	printmanualincrement();
-#endif
-}
-
-void onRewind(){
-	motor.goRelative(-MANUAL_DRIVE_NSTEPS);
-#if defined _USE_SERIAL_CONTROLS
-	Serial.print("Going backward by ");
-	printmanualincrement();
-#endif
-}
-
-void onSetAtHome(){
-	motor.setAtHome();
-#if defined _USE_SERIAL_CONTROLS
-	Serial.println("Setting home to current step");
-	onSerialStatus();
-#endif	
-}
-
-void onGoHome(){
-	motor.goHome();
-#if defined _USE_SERIAL_CONTROLS
-	if (motor.homeSet()){
-		Serial.println("Going home");
-		onSerialStatus();
-	} else {
-		Serial.println("Can't go home because it hasn't been set");
-	}
-#endif	
-}
-
-/*	---------------------------------------------------- 
-	COMMAND HANDLERS (serial only)
-	---------------------------------------------------- */
-
-#if defined _USE_SERIAL_CONTROLS
 
 void establishContact() {
   while (Serial.available() <= 0) {
