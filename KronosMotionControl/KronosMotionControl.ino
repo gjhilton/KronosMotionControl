@@ -6,9 +6,10 @@
 #include <Ethernet.h>
 #include <ArdOSC.h>
 #include "RotaryStepper.h"
+#include "configOSC.h"
 
 /*	---------------------------------------------------- 
-	CONFIGURATION
+	OSC CONFIGURATION
 	---------------------------------------------------- */
 
 byte myMac[] = {0xDE,0xAD,0xBE,0xEF,0xFE,0xED };
@@ -46,11 +47,26 @@ void loop(){
 void oscBegin(){
 	Ethernet.begin(myMac ,myIp);
 	server.begin(serverPort);
-	server.addCallback("/ard/fwd",&onOSCForward);
+	server.addCallback(OSC_ADDR_FORWARD,&onOSCForward);
+	server.addCallback(OSC_ADDR_REWIND,&onOSCRewind);
+	server.addCallback(OSC_ADDR_SET_HOME,&onOSCSetHome);
+	server.addCallback(OSC_ADDR_HOME,&onOSCHome);
 }
 
 void onOSCForward(OSCMessage *_mes){
 	onForward();
+}
+
+void onOSCRewind(OSCMessage *_mes){
+	onRewind();
+}
+
+void onOSCSetHome(OSCMessage *_mes){
+	onSetAtHome();
+}
+
+void onOSCHome(OSCMessage *_mes){
+	onGoHome();
 }
 
 /*	---------------------------------------------------- 

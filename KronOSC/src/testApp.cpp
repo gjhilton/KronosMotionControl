@@ -1,4 +1,5 @@
 #include "testApp.h"
+#include "configOSC.h"
 
 #define WIDGETNAME_HARD_STOP "HARD STOP"
 #define WIDGETNAME_REWIND "REWIND TO HOME"
@@ -9,16 +10,6 @@
 #define WIDGETNAME_BACK "REVERSE 50"
 #define WIDGETNAME_DEPLOY "DEPLOY"
 #define WIDGETNAME_UNDEPLOY "UNDEPLOY"
-
-#define OSC_ADDR_HARD_STOP "/1/light1"
-#define OSC_ADDR_REWIND "/rewind"
-#define OSC_ADDR_SET_01 "/set1"
-#define OSC_ADDR_SET_12 "/set2"
-#define OSC_ADDR_SET_23 "/set3"
-#define OSC_ADDR_FWD "/fwd"
-#define OSC_ADDR_BACK "/rev"
-#define OSC_ADDR_DEPLOY "/deploy"
-#define OSC_ADDR_UNDEPLOY "/undeploy"
 
 void testApp::setup(){
 	
