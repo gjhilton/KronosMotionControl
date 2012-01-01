@@ -2,7 +2,9 @@
 
 #define DEFAULT_SPEED_RPM 0.25
 
-/* CONSTRUCTOR */
+/*	---------------------------------------------------- 
+	CONSTRUCTOR
+	---------------------------------------------------- */
 
 RotaryStepper::RotaryStepper(int steps_per_rotation_per_rotation, int motor_pin_1, int motor_pin_2, int motor_pin_3, int motor_pin_4) {
 	abs_step = 0;
@@ -19,7 +21,9 @@ RotaryStepper::RotaryStepper(int steps_per_rotation_per_rotation, int motor_pin_
 	setSpeed(DEFAULT_SPEED_RPM);
 }
 
-/* GETTERS */
+/*	---------------------------------------------------- 
+	GETTERS
+	---------------------------------------------------- */
 
 int RotaryStepper::getAbsoluteStep() {
 	return abs_step; // steps relative to motor position when powered up
@@ -37,7 +41,9 @@ bool RotaryStepper::homeSet() {
 	return home_is_set;
 }
 
-/* SETTERS */
+/*	---------------------------------------------------- 
+	SETTERS
+	---------------------------------------------------- */
 
 void RotaryStepper::setHome(int step){
 	home_offset_steps = step;
@@ -48,7 +54,9 @@ void RotaryStepper::setAtHome(){
 	setHome(abs_step);
 }
 
-/* MOTOR DRIVING */
+/*	---------------------------------------------------- 
+	MOTOR DRIVING
+	---------------------------------------------------- */
 
 void RotaryStepper::goRelative(int nsteps) {
 	// TODO
@@ -105,7 +113,9 @@ void RotaryStepper::setSpeed(long speedRPM){
 	step_delay = 60L * 1000L / steps_per_rotation / speedRPM;
 }
 
-/* HARDWARE INTERFACE */
+/*	---------------------------------------------------- 
+	HARDWARE INTERFACE
+	---------------------------------------------------- */
 
 void RotaryStepper::initPins(){
 #ifndef _SIMULATOR
@@ -163,7 +173,9 @@ void RotaryStepper::stepMotor(int thisStep){
 }
 
 
-/* UTILITIES */
+/*	---------------------------------------------------- 
+	UTILITIES
+	---------------------------------------------------- */
 
 float RotaryStepper::stepToDegrees(int step){
 	return step * (360.0/steps_per_rotation);

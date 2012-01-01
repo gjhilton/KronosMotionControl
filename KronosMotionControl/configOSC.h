@@ -6,7 +6,5 @@
 #define OSC_ADDR_SET_01 	"/set1"
 #define OSC_ADDR_SET_12 	"/set2"
 #define OSC_ADDR_SET_23 	"/set3"
-#define OSC_ADDR_FWD 		"/fwd"
-#define OSC_ADDR_BACK 		"/rev"
 #define OSC_ADDR_DEPLOY 	"/deploy"
 #define OSC_ADDR_UNDEPLOY 	"/undeploy"
