@@ -4,12 +4,12 @@
 
 /* CONSTRUCTOR */
 
-RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int motor_pin_1, int motor_pin_2, int motor_pin_3, int motor_pin_4) {
+RotaryStepper::RotaryStepper(int steps_per_rotation_per_rotation, int motor_pin_1, int motor_pin_2, int motor_pin_3, int motor_pin_4) {
 	abs_step = 0;
 	home_is_set = false;
 	home_offset_steps = 0;
 	
-	steps_per_rotation = number_of_steps_per_rotation;
+	steps_per_rotation = steps_per_rotation_per_rotation;
 	pin_1 = motor_pin_1;
 	pin_2 = motor_pin_2;
 	pin_3 = motor_pin_3;
@@ -63,10 +63,42 @@ void RotaryStepper::goHome() {
 }
 
 void RotaryStepper::drive(int target){
-	stepMotor(0);
-	stepMotor(1);
-	stepMotor(2);
-	stepMotor(3);
+	int steps_to_move = 10;
+	int direction =0 ;
+	int step_number = 0;
+  int steps_left = abs(steps_to_move);  // how many steps to take
+  
+  // determine direction based on whether steps_to_mode is + or -:
+  if (steps_to_move > 0) {direction = 1;}
+  if (steps_to_move < 0) {direction = 0;}
+    
+    
+  // decrement the number of steps, moving one step each time:
+  while(steps_left > 0) {
+  // move only if the appropriate delay has passed:
+  if (millis() - last_step_time >= step_delay) {
+      // get the timeStamp of when you stepped:
+      last_step_time = millis();
+      // increment or decrement the step number,
+      // depending on direction:
+      if (direction == 1) {
+        step_number++;
+        if (step_number == steps_per_rotation) {
+          step_number = 0;
+        }
+      } 
+      else { 
+        if (step_number == 0) {
+          step_number = steps_per_rotation;
+        }
+        step_number--;
+      }
+      // decrement the steps left:
+      steps_left--;
+      // step the motor to step number 0, 1, 2, or 3:
+      stepMotor(step_number % 4);
+    }
+  }
 }
 
 void RotaryStepper::setSpeed(long speedRPM){

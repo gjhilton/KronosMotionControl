@@ -1,4 +1,5 @@
 #define _USE_SERIAL_CONTROLS
+
 #define MANUAL_DRIVE_NSTEPS 10
 #define STEPS_PER_ROTATION 200
 
@@ -8,17 +9,31 @@ RotaryStepper motor(STEPS_PER_ROTATION,8,9,10,11);
 
 void setup() {
 #if defined _USE_SERIAL_CONTROLS
+	serialBegin();
+#endif
+}
+
+void loop(){
+#if defined _USE_SERIAL_CONTROLS
+	serialLoop();
+#endif
+}
+
+/*	---------------------------------------------------- 
+	SERIAL
+	---------------------------------------------------- */
+
+#if defined _USE_SERIAL_CONTROLS
+void serialBegin(){
 	Serial.begin(9600);
 	while (!Serial) {
 		;
 	}
 	Serial.println("Send (h) for help");
 	establishContact();
-#endif
 }
 
-void loop(){
-#if defined _USE_SERIAL_CONTROLS
+void serialLoop(){
 	if (Serial.available() > 0) {
 		int inByte = Serial.read();
 		switch (inByte){
@@ -53,8 +68,8 @@ void loop(){
 		}
 		Serial.println();
 	}
-#endif
 }
+#endif
 
 /*	---------------------------------------------------- 
 	COMMAND HANDLERS

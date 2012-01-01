@@ -41,6 +41,7 @@ private:
 	
 	int abs_step;
 	int home_offset_steps;
+	int last_step_time;
 	int pin_1,pin_2,pin_3,pin_4;
 	int steps_per_rotation;
 	bool home_is_set;
