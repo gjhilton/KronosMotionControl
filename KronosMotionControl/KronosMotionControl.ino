@@ -5,8 +5,11 @@
 #include <SPI.h>
 #include <Ethernet.h>
 #include <ArdOSC.h>
-
 #include "RotaryStepper.h"
+
+/*	---------------------------------------------------- 
+	GLOBALS
+	---------------------------------------------------- */
 
 RotaryStepper motor(STEPS_PER_ROTATION,8,9,10,11);
 
@@ -14,6 +17,10 @@ byte myMac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 byte myIp[]  = { 192, 168, 0, 177 };
 int  serverPort  = 10000;
 OSCServer server;
+
+/*	---------------------------------------------------- 
+	ARDUINO LIFECYCLE
+	---------------------------------------------------- */
 
 void setup() {
 	oscBegin();
