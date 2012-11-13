@@ -111,7 +111,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 		ofxUILabelButton *button = (ofxUILabelButton *) e.widget;
 		if (button->getValue() == 1){
 			cout << "Going forward 50 steps" << endl;
-			sendOSC(OSC_ADDR_FWD,50);
+			sendOSC(OSC_ADDR_FORWARD,50);
 		}
     }
 	
@@ -119,7 +119,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 		ofxUILabelButton *button = (ofxUILabelButton *) e.widget;
 		if (button->getValue() == 1){
 			cout << "Going back 50 steps" << endl;
-			sendOSC(OSC_ADDR_BACK,50);
+			sendOSC(OSC_ADDR_REWIND,50);
 		}
     }
 	

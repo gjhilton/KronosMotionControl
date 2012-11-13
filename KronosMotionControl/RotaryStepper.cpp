@@ -71,8 +71,9 @@ void RotaryStepper::goHome() {
 }
 
 void RotaryStepper::drive(int target){
-	/*
+	
 	millis();
+	/*
 	
 	int steps_to_move = 10;
 	int direction =0 ;
