@@ -71,7 +71,7 @@ void RotaryStepper::goHome() {
 }
 
 void RotaryStepper::drive(int target){
-	
+
 	millis();
 	/*
 	
@@ -194,4 +194,10 @@ float RotaryStepper::stepToRotations(int step){
 void RotaryStepper::report(string s){
 	cout << "RotaryStepper: " << s << "\n";
 }
+
+
+long RotaryStepper::millis(){
+	return clock()/(CLOCKS_PER_SEC/1000);
+}
+
 #endif

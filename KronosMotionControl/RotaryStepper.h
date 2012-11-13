@@ -4,6 +4,7 @@
 #ifdef _SIMULATOR
 	#include <string>
 	#include <iostream>
+	#include <ctime>
 	using namespace std;
 #else
 	#include "Arduino.h"
@@ -33,6 +34,7 @@ public:
 
 #ifdef _SIMULATOR
 	void report(string s);
+	long millis();
 #endif
 	
 protected:

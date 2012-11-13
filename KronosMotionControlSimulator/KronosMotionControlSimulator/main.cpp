@@ -25,10 +25,7 @@ void status(){
 }
 
 void testDrive(){
-	status();
-	cout << "Testing drive\n";
-	motor.drive(1);
-	status();
+	
 }
 
 int main(int argc, const char * argv[]) {
