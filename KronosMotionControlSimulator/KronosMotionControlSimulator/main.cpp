@@ -21,11 +21,14 @@ string home(){
 }
 
 void status(){
-	cout << "STATUS -> " << home() << " Absolute: " << motor.getAbsoluteStep() << " Relative: " << motor.getRelativeStep() << "\n";
+	cout << "STATUS @" << motor.millis() << "ms -> " << home() << " Absolute: " << motor.getAbsoluteStep() << " Relative: " << motor.getRelativeStep() << "\n";
 }
 
 void testDrive(){
-	
+	status();
+	// motor.setSpeed();
+	motor.drive(200);
+	status();
 }
 
 int main(int argc, const char * argv[]) {

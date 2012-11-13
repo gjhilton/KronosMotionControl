@@ -10,6 +10,7 @@ RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int motor_pin_1, 
 	abs_step = 0;
 	home_is_set = false;
 	home_offset_steps = 0;
+	last_step_time = millis();
 	
 	steps_per_rotation = number_of_steps_per_rotation;
 	pin_1 = motor_pin_1;
@@ -18,7 +19,8 @@ RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int motor_pin_1, 
 	pin_4 = motor_pin_4;
 	
 	initPins();
-	setSpeed(DEFAULT_SPEED_RPM);
+	// setSpeed(DEFAULT_SPEED_RPM);
+	step_delay = 5;
 }
 
 /*	---------------------------------------------------- 
@@ -72,7 +74,30 @@ void RotaryStepper::goHome() {
 
 void RotaryStepper::drive(int target){
 
-	millis();
+	// forward
+	if (abs_step < target ) {
+		while(abs_step < target) {
+			if (millis() - last_step_time >= step_delay) {
+				abs_step ++;
+				cout << abs_step << "\n";
+				last_step_time = millis();
+				stepMotor(abs_step % 4); // i worry this is off by one
+			}
+		}
+	}
+
+	// reverse
+	if (abs_step > target ) {
+		while(abs_step > target) {
+			if (millis() - last_step_time >= step_delay) {
+				abs_step --;
+				cout << abs_step << "\n";
+				last_step_time = millis();
+				stepMotor(abs_step % 4);
+			}
+		}
+	}
+
 	/*
 	
 	int steps_to_move = 10;
@@ -115,6 +140,7 @@ void RotaryStepper::drive(int target){
 }
 
 void RotaryStepper::setSpeed(long speedRPM){
+	// FIXME
 	step_delay = 60L * 1000L / steps_per_rotation / speedRPM;
 }
 
@@ -192,7 +218,7 @@ float RotaryStepper::stepToRotations(int step){
 
 #ifdef _SIMULATOR
 void RotaryStepper::report(string s){
-	cout << "RotaryStepper: " << s << "\n";
+	// cout << "RotaryStepper: " << s << "\n";
 }
 
 
