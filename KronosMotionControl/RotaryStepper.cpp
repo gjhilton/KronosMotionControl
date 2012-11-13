@@ -1,17 +1,17 @@
 #include "RotaryStepper.h"
 
-#define DEFAULT_SPEED_RPM 0.25
+#define DEFAULT_SPEED_RPM 1
 
 /*	---------------------------------------------------- 
 	CONSTRUCTOR
 	---------------------------------------------------- */
 
-RotaryStepper::RotaryStepper(int steps_per_rotation_per_rotation, int motor_pin_1, int motor_pin_2, int motor_pin_3, int motor_pin_4) {
+RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int motor_pin_1, int motor_pin_2, int motor_pin_3, int motor_pin_4) {
 	abs_step = 0;
 	home_is_set = false;
 	home_offset_steps = 0;
 	
-	steps_per_rotation = steps_per_rotation_per_rotation;
+	steps_per_rotation = number_of_steps_per_rotation;
 	pin_1 = motor_pin_1;
 	pin_2 = motor_pin_2;
 	pin_3 = motor_pin_3;
@@ -71,6 +71,9 @@ void RotaryStepper::goHome() {
 }
 
 void RotaryStepper::drive(int target){
+	/*
+	millis();
+	
 	int steps_to_move = 10;
 	int direction =0 ;
 	int step_number = 0;
@@ -107,6 +110,7 @@ void RotaryStepper::drive(int target){
       stepMotor(step_number % 4);
     }
   }
+	 */
 }
 
 void RotaryStepper::setSpeed(long speedRPM){
