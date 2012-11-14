@@ -27,7 +27,13 @@ void status(){
 void testHome(){
 	cout << "\n\n***** TESTING GO HOME ****\n\n";
 	status();
+	motor.driveHome();
+	motor.driveToAbsoluteTarget(0);
+	motor.setAtHome();
+	motor.driveHome();
 	motor.driveToAbsoluteTarget(20);
+	motor.setAtHome();
+	motor.driveHome();
 	motor.driveToAbsoluteTarget(-100);
 	motor.setAtHome();
 	motor.driveByRelative(321);

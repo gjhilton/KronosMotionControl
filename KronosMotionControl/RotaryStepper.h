@@ -36,7 +36,7 @@ public:
 
 #ifdef _SIMULATOR
 	void report(string s);
-	// void report(string varname, int i);
+	void report(string varname, int i);
 	long millis();
 #endif
 	

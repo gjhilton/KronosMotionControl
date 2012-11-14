@@ -74,31 +74,30 @@ void onOSCHome(OSCMessage *_mes){
 	---------------------------------------------------- */
 
 void onForward(){
-	motor.goRelative(MANUAL_DRIVE_NSTEPS);
 #if defined _USE_SERIAL
 	Serial.print("Going forward by ");
 	printmanualincrement();
 #endif
+	motor.driveByRelative(MANUAL_DRIVE_NSTEPS);
 }
 
 void onRewind(){
-	motor.goRelative(-MANUAL_DRIVE_NSTEPS);
 #if defined _USE_SERIAL
 	Serial.print("Going backward by ");
 	printmanualincrement();
 #endif
+	motor.driveByRelative(-MANUAL_DRIVE_NSTEPS);
 }
 
 void onSetAtHome(){
 	motor.setAtHome();
 #if defined _USE_SERIAL
-	Serial.println("Setting home to current step");
+	Serial.println("Set home to current step");
 	onSerialStatus();
 #endif	
 }
 
 void onGoHome(){
-	motor.goHome();
 #if defined _USE_SERIAL
 	if (motor.homeSet()){
 		Serial.println("Going home");
@@ -107,6 +106,7 @@ void onGoHome(){
 		Serial.println("Can't go home because it hasn't been set");
 	}
 #endif	
+	motor.driveHome();
 }
 
 /*	---------------------------------------------------- 

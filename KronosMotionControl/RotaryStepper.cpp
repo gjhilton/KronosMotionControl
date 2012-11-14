@@ -154,7 +154,7 @@ void RotaryStepper::stepMotor(){
 			break;
 	}
 #else
-	cout << "abs " << (abs_step) << " ";
+	report("abs ", abs_step);
 	switch (nextStep) {
 		case 0:
 			report("step 0");
@@ -187,12 +187,12 @@ float RotaryStepper::stepToRotations(int step){
 
 #ifdef _SIMULATOR
 void RotaryStepper::report(string s){
-	cout << "RotaryStepper: " << s << "\n";
+	// cout << "RotaryStepper: " << s << "\n";
 }
-/*
+
 void RotaryStepper::report(string varname, int i){
-	cout << "RotaryStepper: " << varname <<": " << i << "\n";
-}*/
+	// cout << "RotaryStepper: " << varname <<":" << i << "\n";
+}
 
 long RotaryStepper::millis(){
 	return clock()/(CLOCKS_PER_SEC/1000);
