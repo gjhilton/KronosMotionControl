@@ -57,32 +57,32 @@ void RotaryStepper::setAtHome(){
 	setHome(abs_step);
 }
 
+void RotaryStepper::setSpeed(long speedRPM){
+	// FIXME
+	// step_delay = 60L * 1000L / steps_per_rotation / speedRPM;
+}
+
 /*	---------------------------------------------------- 
 	MOTOR DRIVING
 	---------------------------------------------------- */
 
-void RotaryStepper::goRelative(int nsteps) {
-	// TODO
-	abs_step += nsteps; // we won't do this here when the motor actually works
+void RotaryStepper::driveByRelative(int nsteps) {
+	driveToAbsoluteTarget(abs_step + nsteps);
 }
 
-void RotaryStepper::goHome() {
-	// TODO
+void RotaryStepper::driveHome() {
 	if (home_is_set){
-		abs_step = home_offset_steps; // we won't do this here when the motor actually works
+		driveToAbsoluteTarget(getHomePos());
 	}
 }
 
-void RotaryStepper::drive(int abs_target){
+void RotaryStepper::driveToAbsoluteTarget(int abs_target){
 
 	// forward
 	if (abs_step < abs_target ) {
 		while(abs_step < abs_target) {
 			if (millis() - last_step_time >= step_delay) {
-				abs_step ++;
-				last_step_time = millis();
-				nextStep ++;
-				stepMotor(); // i worry this is off by one on startup
+				oneStepForward();
 			}
 		}
 	}
@@ -91,58 +91,10 @@ void RotaryStepper::drive(int abs_target){
 	if (abs_step > abs_target ) {
 		while(abs_step > abs_target) {
 			if (millis() - last_step_time >= step_delay) {
-				abs_step --;
-				last_step_time = millis();
-				nextStep --;
-				stepMotor();
+				oneStepBackward();
 			}
 		}
 	}
-
-	/*
-	
-	int steps_to_move = 10;
-	int direction =0 ;
-	int step_number = 0;
-  int steps_left = abs(steps_to_move);  // how many steps to take
-  
-  // determine direction based on whether steps_to_mode is + or -:
-  if (steps_to_move > 0) {direction = 1;}
-  if (steps_to_move < 0) {direction = 0;}
-    
-    
-  // decrement the number of steps, moving one step each time:
-  while(steps_left > 0) {
-  // move only if the appropriate delay has passed:
-  if (millis() - last_step_time >= step_delay) {
-      // get the timeStamp of when you stepped:
-      last_step_time = millis();
-      // increment or decrement the step number,
-      // depending on direction:
-      if (direction == 1) {
-        step_number++;
-        if (step_number == steps_per_rotation) {
-          step_number = 0;
-        }
-      } 
-      else { 
-        if (step_number == 0) {
-          step_number = steps_per_rotation;
-        }
-        step_number--;
-      }
-      // decrement the steps left:
-      steps_left--;
-      // step the motor to step number 0, 1, 2, or 3:
-      stepMotor(step_number % 4);
-    }
-  }
-	 */
-}
-
-void RotaryStepper::setSpeed(long speedRPM){
-	// FIXME
-	step_delay = 60L * 1000L / steps_per_rotation / speedRPM;
 }
 
 /*	---------------------------------------------------- 
@@ -158,9 +110,21 @@ void RotaryStepper::initPins(){
 #endif
 }
 
+void RotaryStepper::oneStepForward(){
+	abs_step ++;
+	nextStep ++;
+	stepMotor(); // i worry this is off by one on startup
+}
+void RotaryStepper::oneStepBackward(){
+	abs_step --;
+	nextStep --;
+	stepMotor();
+}
+
 void RotaryStepper::stepMotor(){
 	if (nextStep == 4) nextStep = 0;
 	if (nextStep == -1) nextStep = 3;
+	last_step_time = millis();
 	
 #ifndef _SIMULATOR
 	switch (nextStep) {
@@ -225,7 +189,10 @@ float RotaryStepper::stepToRotations(int step){
 void RotaryStepper::report(string s){
 	cout << "RotaryStepper: " << s << "\n";
 }
-
+/*
+void RotaryStepper::report(string varname, int i){
+	cout << "RotaryStepper: " << varname <<": " << i << "\n";
+}*/
 
 long RotaryStepper::millis(){
 	return clock()/(CLOCKS_PER_SEC/1000);
