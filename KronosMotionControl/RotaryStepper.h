@@ -27,7 +27,7 @@ public:
 	void goRelative(int nsteps);
 	void setSpeed(long speedRPM);
 	
-	void drive(int target);
+	void drive(int abs_target);
 	
 	float stepToDegrees(int step);
 	float stepToRotations(int step);
@@ -44,6 +44,7 @@ private:
 	int abs_step;
 	int home_offset_steps;
 	long last_step_time;
+	int nextStep;
 	int pin_1,pin_2,pin_3,pin_4;
 	int steps_per_rotation;
 	bool home_is_set;
@@ -51,7 +52,7 @@ private:
 	
 	
 	void initPins();
-	void stepMotor(int thisStep);
+	void stepMotor();
 };
 
 #endif

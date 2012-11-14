@@ -28,6 +28,7 @@ void testDrive(){
 	status();
 	// motor.setSpeed();
 	motor.drive(200);
+	motor.drive(-200);
 	status();
 }
 

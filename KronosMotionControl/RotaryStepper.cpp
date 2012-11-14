@@ -11,6 +11,7 @@ RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int motor_pin_1, 
 	home_is_set = false;
 	home_offset_steps = 0;
 	last_step_time = millis();
+	nextStep = 0;
 	
 	steps_per_rotation = number_of_steps_per_rotation;
 	pin_1 = motor_pin_1;
@@ -72,28 +73,28 @@ void RotaryStepper::goHome() {
 	}
 }
 
-void RotaryStepper::drive(int target){
+void RotaryStepper::drive(int abs_target){
 
 	// forward
-	if (abs_step < target ) {
-		while(abs_step < target) {
+	if (abs_step < abs_target ) {
+		while(abs_step < abs_target) {
 			if (millis() - last_step_time >= step_delay) {
 				abs_step ++;
-				cout << abs_step << "\n";
 				last_step_time = millis();
-				stepMotor(abs_step % 4); // i worry this is off by one
+				nextStep ++;
+				stepMotor(); // i worry this is off by one on startup
 			}
 		}
 	}
 
 	// reverse
-	if (abs_step > target ) {
-		while(abs_step > target) {
+	if (abs_step > abs_target ) {
+		while(abs_step > abs_target) {
 			if (millis() - last_step_time >= step_delay) {
 				abs_step --;
-				cout << abs_step << "\n";
 				last_step_time = millis();
-				stepMotor(abs_step % 4);
+				nextStep --;
+				stepMotor();
 			}
 		}
 	}
@@ -157,9 +158,12 @@ void RotaryStepper::initPins(){
 #endif
 }
 
-void RotaryStepper::stepMotor(int thisStep){
+void RotaryStepper::stepMotor(){
+	if (nextStep == 4) nextStep = 0;
+	if (nextStep == -1) nextStep = 3;
+	
 #ifndef _SIMULATOR
-	switch (thisStep) {
+	switch (nextStep) {
 		case 0:    // 1010
 			digitalWrite(pin_1, HIGH);
 			digitalWrite(pin_2, LOW);
@@ -186,7 +190,8 @@ void RotaryStepper::stepMotor(int thisStep){
 			break;
 	}
 #else
-	switch (thisStep) {
+	cout << "abs " << (abs_step) << " ";
+	switch (nextStep) {
 		case 0:
 			report("step 0");
 			break;
@@ -218,7 +223,7 @@ float RotaryStepper::stepToRotations(int step){
 
 #ifdef _SIMULATOR
 void RotaryStepper::report(string s){
-	// cout << "RotaryStepper: " << s << "\n";
+	cout << "RotaryStepper: " << s << "\n";
 }
 
 
