@@ -1,12 +1,11 @@
 #define _USE_SERIAL
-#define MANUAL_DRIVE_NSTEPS 200
+#define MANUAL_DRIVE_NSTEPS 50
 #define STEPS_PER_ROTATION 200
 
-/*
 #include <SPI.h>
 #include <Ethernet.h>
 #include <ArdOSC.h>
-*/
+
 #include "RotaryStepper.h"
 #include "configOSC.h"
 
@@ -15,22 +14,22 @@
 	---------------------------------------------------- */
 
 byte myMac[] = {0xDE,0xAD,0xBE,0xEF,0xFE,0xED };
-byte myIp[]  = {192,168,0,177};
+byte myIp[]  = {192,168,1,177};
 int  serverPort  = 10000;
 
 /*	---------------------------------------------------- 
 	GLOBALS
 	---------------------------------------------------- */
 
-RotaryStepper motor(STEPS_PER_ROTATION,8,9,10,11);
-// OSCServer server;
+RotaryStepper motor(STEPS_PER_ROTATION,6,7,8,9);
+OSCServer server;
 
 /*	---------------------------------------------------- 
 	ARDUINO LIFECYCLE
 	---------------------------------------------------- */
 
 void setup() {
-	//oscBegin();
+	oscBegin();
 #if defined _USE_SERIAL
 	serialBegin();
 #endif
@@ -45,7 +44,7 @@ void loop(){
 /*	---------------------------------------------------- 
 	OSC
 	---------------------------------------------------- */
-/*
+
 void oscBegin(){
 	Ethernet.begin(myMac ,myIp);
 	server.begin(serverPort);
@@ -69,7 +68,7 @@ void onOSCSetHome(OSCMessage *_mes){
 
 void onOSCHome(OSCMessage *_mes){
 	onGoHome();
-}*/
+}
 
 /*	---------------------------------------------------- 
 	COMMAND HANDLERS

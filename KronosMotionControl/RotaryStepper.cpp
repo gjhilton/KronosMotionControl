@@ -133,103 +133,24 @@ void RotaryStepper::stepMotor(){
       digitalWrite(motor_pin_2, LOW);
       digitalWrite(motor_pin_3, HIGH);
       digitalWrite(motor_pin_4, LOW);
-
-		Serial.print("Step 0 ");
-		Serial.print(motor_pin_1);
-		Serial.print(":");
-		Serial.print(HIGH);
-		Serial.print(" ");
-		Serial.print(motor_pin_2);
-		Serial.print(":");
-		Serial.print(LOW);
-		Serial.print(" ");
-		Serial.print(motor_pin_3);
-		Serial.print(":");
-		Serial.print(HIGH);
-		Serial.print(" ");
-		Serial.print(motor_pin_4);
-		Serial.print(":");
-		Serial.print(LOW);
-		Serial.println(" ");
-
       break;
       case 1:    // 0110
       digitalWrite(motor_pin_1, LOW);
       digitalWrite(motor_pin_2, HIGH);
       digitalWrite(motor_pin_3, HIGH);
       digitalWrite(motor_pin_4, LOW);
-
-		Serial.print("Step 1 ");
-		Serial.print(motor_pin_1);
-		Serial.print(":");
-		Serial.print(LOW);
-		Serial.print(" ");
-		Serial.print(motor_pin_2);
-		Serial.print(":");
-		Serial.print(HIGH);
-		Serial.print(" ");
-		Serial.print(motor_pin_3);
-		Serial.print(":");
-		Serial.print(HIGH);
-		Serial.print(" ");
-		Serial.print(motor_pin_4);
-		Serial.print(":");
-		Serial.print(LOW);
-		Serial.println(" ");
-
-
       break;
       case 2:    //0101
       digitalWrite(motor_pin_1, LOW);
       digitalWrite(motor_pin_2, HIGH);
       digitalWrite(motor_pin_3, LOW);
       digitalWrite(motor_pin_4, HIGH);
-
-		Serial.print("Step 2 ");
-		Serial.print(motor_pin_1);
-		Serial.print(":");
-		Serial.print(LOW);
-		Serial.print(" ");
-		Serial.print(motor_pin_2);
-		Serial.print(":");
-		Serial.print(HIGH);
-		Serial.print(" ");
-		Serial.print(motor_pin_3);
-		Serial.print(":");
-		Serial.print(LOW);
-		Serial.print(" ");
-		Serial.print(motor_pin_4);
-		Serial.print(":");
-		Serial.print(HIGH);
-		Serial.println(" ");
-
-
       break;
       case 3:    //1001
       digitalWrite(motor_pin_1, HIGH);
       digitalWrite(motor_pin_2, LOW);
       digitalWrite(motor_pin_3, LOW);
       digitalWrite(motor_pin_4, HIGH);
-
-		Serial.print("Step 3 ");
-		Serial.print(motor_pin_1);
-		Serial.print(":");
-		Serial.print(HIGH);
-		Serial.print(" ");
-		Serial.print(motor_pin_2);
-		Serial.print(":");
-		Serial.print(LOW);
-		Serial.print(" ");
-		Serial.print(motor_pin_3);
-		Serial.print(":");
-		Serial.print(LOW);
-		Serial.print(" ");
-		Serial.print(motor_pin_4);
-		Serial.print(":");
-		Serial.print(HIGH);
-		Serial.println(" ");
-
-
       break;
     } 
 
