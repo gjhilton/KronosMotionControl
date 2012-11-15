@@ -1,10 +1,12 @@
 #define _USE_SERIAL
-#define MANUAL_DRIVE_NSTEPS 10
+#define MANUAL_DRIVE_NSTEPS 200
 #define STEPS_PER_ROTATION 200
 
+/*
 #include <SPI.h>
 #include <Ethernet.h>
 #include <ArdOSC.h>
+*/
 #include "RotaryStepper.h"
 #include "configOSC.h"
 
@@ -21,14 +23,14 @@ int  serverPort  = 10000;
 	---------------------------------------------------- */
 
 RotaryStepper motor(STEPS_PER_ROTATION,8,9,10,11);
-OSCServer server;
+// OSCServer server;
 
 /*	---------------------------------------------------- 
 	ARDUINO LIFECYCLE
 	---------------------------------------------------- */
 
 void setup() {
-	oscBegin();
+	//oscBegin();
 #if defined _USE_SERIAL
 	serialBegin();
 #endif
@@ -43,7 +45,7 @@ void loop(){
 /*	---------------------------------------------------- 
 	OSC
 	---------------------------------------------------- */
-
+/*
 void oscBegin(){
 	Ethernet.begin(myMac ,myIp);
 	server.begin(serverPort);
@@ -67,11 +69,25 @@ void onOSCSetHome(OSCMessage *_mes){
 
 void onOSCHome(OSCMessage *_mes){
 	onGoHome();
-}
+}*/
 
 /*	---------------------------------------------------- 
 	COMMAND HANDLERS
 	---------------------------------------------------- */
+
+void onForwardOne(){
+#if defined _USE_SERIAL
+	Serial.print("Going forward by 1");
+#endif
+	motor.oneStepForward();
+}
+
+void onBackwardOne(){
+#if defined _USE_SERIAL
+	Serial.print("Going BACKWARD by 1");
+#endif
+	motor.oneStepBackward();
+}
 
 void onForward(){
 #if defined _USE_SERIAL
@@ -83,7 +99,7 @@ void onForward(){
 
 void onRewind(){
 #if defined _USE_SERIAL
-	Serial.print("Going backward by ");
+	Serial.print("Going BACKWARD by ");
 	printmanualincrement();
 #endif
 	motor.driveByRelative(-MANUAL_DRIVE_NSTEPS);
@@ -147,6 +163,12 @@ void serialLoop(){
 			case '_':
 				onRewind();
 				break;
+			case '[':
+				onBackwardOne();
+				break;
+			case ']':
+				onForwardOne();
+				break;
 			case 10:
 			case 13:
 				Serial.println("Please turn off sending line endings");
@@ -201,6 +223,8 @@ void onSerialHelp(){
 	printmanualincrement();
 	Serial.print  (" -/_ -> reverse by ");
 	printmanualincrement();
+	Serial.println  (" ] -> forward by 1");
+	Serial.println  (" [ -> backward by 1");
 	printspacer();
 }
 

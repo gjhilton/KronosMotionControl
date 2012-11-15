@@ -6,7 +6,7 @@
 	CONSTRUCTOR
 	---------------------------------------------------- */
 
-RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int motor_pin_1, int motor_pin_2, int motor_pin_3, int motor_pin_4) {
+RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int pin_1, int pin_2, int pin_3, int pin_4) {
 	abs_step = 0;
 	home_is_set = false;
 	home_offset_steps = 0;
@@ -14,10 +14,10 @@ RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int motor_pin_1, 
 	nextStep = 0;
 	
 	steps_per_rotation = number_of_steps_per_rotation;
-	pin_1 = motor_pin_1;
-	pin_2 = motor_pin_2;
-	pin_3 = motor_pin_3;
-	pin_4 = motor_pin_4;
+	motor_pin_1 = pin_1;
+	motor_pin_2 = pin_2;
+	motor_pin_3 = pin_3;
+	motor_pin_4 = pin_4;
 	
 	initPins();
 	// setSpeed(DEFAULT_SPEED_RPM);
@@ -103,10 +103,10 @@ void RotaryStepper::driveToAbsoluteTarget(int abs_target){
 
 void RotaryStepper::initPins(){
 #ifndef _SIMULATOR
-	pinMode(pin_1, OUTPUT);
-	pinMode(pin_2, OUTPUT);
-	pinMode(pin_3, OUTPUT);
-	pinMode(pin_4, OUTPUT);
+	pinMode(motor_pin_1, OUTPUT);
+	pinMode(motor_pin_2, OUTPUT);
+	pinMode(motor_pin_3, OUTPUT);
+	pinMode(motor_pin_4, OUTPUT);
 #endif
 }
 
@@ -127,32 +127,112 @@ void RotaryStepper::stepMotor(){
 	last_step_time = millis();
 	
 #ifndef _SIMULATOR
-	switch (nextStep) {
-		case 0:    // 1010
-			digitalWrite(pin_1, HIGH);
-			digitalWrite(pin_2, LOW);
-			digitalWrite(pin_3, HIGH);
-			digitalWrite(pin_4, LOW);
-			break;
-		case 1:    // 0110
-			digitalWrite(pin_1, LOW);
-			digitalWrite(pin_2, HIGH);
-			digitalWrite(pin_3, HIGH);
-			digitalWrite(pin_4, LOW);
-			break;
-		case 2:    //0101
-			digitalWrite(pin_1, LOW);
-			digitalWrite(pin_2, HIGH);
-			digitalWrite(pin_3, LOW);
-			digitalWrite(pin_4, HIGH);
-			break;
-		case 3:    //1001
-			digitalWrite(pin_1, HIGH);
-			digitalWrite(pin_2, LOW);
-			digitalWrite(pin_3, LOW);
-			digitalWrite(pin_4, HIGH);
-			break;
-	}
+   switch (nextStep) {
+      case 0:    // 1010
+      digitalWrite(motor_pin_1, HIGH);
+      digitalWrite(motor_pin_2, LOW);
+      digitalWrite(motor_pin_3, HIGH);
+      digitalWrite(motor_pin_4, LOW);
+
+		Serial.print("Step 0 ");
+		Serial.print(motor_pin_1);
+		Serial.print(":");
+		Serial.print(HIGH);
+		Serial.print(" ");
+		Serial.print(motor_pin_2);
+		Serial.print(":");
+		Serial.print(LOW);
+		Serial.print(" ");
+		Serial.print(motor_pin_3);
+		Serial.print(":");
+		Serial.print(HIGH);
+		Serial.print(" ");
+		Serial.print(motor_pin_4);
+		Serial.print(":");
+		Serial.print(LOW);
+		Serial.println(" ");
+
+      break;
+      case 1:    // 0110
+      digitalWrite(motor_pin_1, LOW);
+      digitalWrite(motor_pin_2, HIGH);
+      digitalWrite(motor_pin_3, HIGH);
+      digitalWrite(motor_pin_4, LOW);
+
+		Serial.print("Step 1 ");
+		Serial.print(motor_pin_1);
+		Serial.print(":");
+		Serial.print(LOW);
+		Serial.print(" ");
+		Serial.print(motor_pin_2);
+		Serial.print(":");
+		Serial.print(HIGH);
+		Serial.print(" ");
+		Serial.print(motor_pin_3);
+		Serial.print(":");
+		Serial.print(HIGH);
+		Serial.print(" ");
+		Serial.print(motor_pin_4);
+		Serial.print(":");
+		Serial.print(LOW);
+		Serial.println(" ");
+
+
+      break;
+      case 2:    //0101
+      digitalWrite(motor_pin_1, LOW);
+      digitalWrite(motor_pin_2, HIGH);
+      digitalWrite(motor_pin_3, LOW);
+      digitalWrite(motor_pin_4, HIGH);
+
+		Serial.print("Step 2 ");
+		Serial.print(motor_pin_1);
+		Serial.print(":");
+		Serial.print(LOW);
+		Serial.print(" ");
+		Serial.print(motor_pin_2);
+		Serial.print(":");
+		Serial.print(HIGH);
+		Serial.print(" ");
+		Serial.print(motor_pin_3);
+		Serial.print(":");
+		Serial.print(LOW);
+		Serial.print(" ");
+		Serial.print(motor_pin_4);
+		Serial.print(":");
+		Serial.print(HIGH);
+		Serial.println(" ");
+
+
+      break;
+      case 3:    //1001
+      digitalWrite(motor_pin_1, HIGH);
+      digitalWrite(motor_pin_2, LOW);
+      digitalWrite(motor_pin_3, LOW);
+      digitalWrite(motor_pin_4, HIGH);
+
+		Serial.print("Step 3 ");
+		Serial.print(motor_pin_1);
+		Serial.print(":");
+		Serial.print(HIGH);
+		Serial.print(" ");
+		Serial.print(motor_pin_2);
+		Serial.print(":");
+		Serial.print(LOW);
+		Serial.print(" ");
+		Serial.print(motor_pin_3);
+		Serial.print(":");
+		Serial.print(LOW);
+		Serial.print(" ");
+		Serial.print(motor_pin_4);
+		Serial.print(":");
+		Serial.print(HIGH);
+		Serial.println(" ");
+
+
+      break;
+    } 
+
 #else
 	report("abs ", abs_step);
 	switch (nextStep) {

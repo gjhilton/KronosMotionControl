@@ -48,7 +48,10 @@ private:
 	int home_offset_steps;
 	long last_step_time;
 	int nextStep;
-	int pin_1,pin_2,pin_3,pin_4;
+	int motor_pin_1;
+	int motor_pin_2;
+	int motor_pin_3;
+	int motor_pin_4;
 	int steps_per_rotation;
 	bool home_is_set;
 	unsigned long step_delay;    // delay between steps, in ms, based on speed
