@@ -1,5 +1,5 @@
 #define _USE_SERIAL
-#define MANUAL_DRIVE_NSTEPS 50
+#define MANUAL_DRIVE_NSTEPS 25
 #define STEPS_PER_ROTATION 200
 
 #include <SPI.h>
@@ -13,8 +13,8 @@
 	OSC CONFIGURATION
 	---------------------------------------------------- */
 
-byte myMac[] = {0xDE,0xAD,0xBE,0xEF,0xFE,0xED };
-byte myIp[]  = {192,168,1,177};
+byte myMac[] = {0xDE,0xAD,0xBE,0xEE,0xAE,0xEB };
+byte myIp[]  = {192,168,1,123};
 int  serverPort  = 10000;
 
 /*	---------------------------------------------------- 
@@ -22,6 +22,7 @@ int  serverPort  = 10000;
 	---------------------------------------------------- */
 
 RotaryStepper motor(STEPS_PER_ROTATION,6,7,8,9);
+OSCClient client;
 OSCServer server;
 
 /*	---------------------------------------------------- 
@@ -36,6 +37,9 @@ void setup() {
 }
 
 void loop(){
+	if(server.aviableCheck()>0){
+		// this pointless call is the only thing that makes the skanky osc library work, so don't remove it
+	}
 #if defined _USE_SERIAL
 	serialLoop();
 #endif

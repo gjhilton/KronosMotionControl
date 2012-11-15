@@ -5,10 +5,8 @@
 #include "ofxOsc.h"
 
 // #define HOST "localhost"
-#define HOST "192.168.1.200"
-// #define HOST "192.168.1.14"
-#define PORT 9000
-// #define PORT 9010
+#define HOST "192.168.1.177"
+#define PORT 10000
 
 class testApp : public ofBaseApp{
 

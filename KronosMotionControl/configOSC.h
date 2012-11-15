@@ -2,6 +2,7 @@
 #define OSC_ADDR_REWIND 	"/ard/rwd"
 #define OSC_ADDR_SET_HOME 	"/ard/seth"
 #define OSC_ADDR_HOME 		"/ard/home"
+
 #define OSC_ADDR_HARD_STOP	"/ard/fwd"
 #define OSC_ADDR_SET_01 	"/set1"
 #define OSC_ADDR_SET_12 	"/set2"
