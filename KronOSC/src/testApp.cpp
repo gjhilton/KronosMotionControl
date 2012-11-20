@@ -10,7 +10,20 @@
 #define WIDGETNAME_DEPLOY "DEPLOY"
 #define WIDGETNAME_UNDEPLOY "UNDEPLOY"
 
+#define OSC_ADDR_HARD_STOP "/hardstop"
+#define OSC_ADDR_REWIND "/rewind"
+#define OSC_ADDR_SET_01 "/set1"
+#define OSC_ADDR_SET_12 "/set2"
+#define OSC_ADDR_SET_23 "/set3"
+#define OSC_ADDR_FWD "/fwd"
+#define OSC_ADDR_BACK "/rev"
+#define OSC_ADDR_DEPLOY "/deploy"
+#define OSC_ADDR_UNDEPLOY "/undeploy"
+
 void testApp::setup(){
+	
+	sender.setup(HOST, PORT);
+	
 	ofSetVerticalSync(true);
 	ofEnableSmoothing();
     	
@@ -46,7 +59,17 @@ void testApp::update(){
 }
 
 void testApp::draw(){
+	string buf;
+	buf = "sending osc to " + string(HOST) + ":" + ofToString(PORT);
+	ofDrawBitmapString(buf, 5, 490);
+}
 
+void testApp::sendOSC(string address, int val=0){
+	ofxOscMessage m;
+	m.setAddress(address);
+	m.addIntArg(val);
+	sender.sendMessage(m);
+	cout << "Send -> " << address << ":" << val << endl;
 }
 
 void testApp::guiEvent(ofxUIEventArgs &e)
@@ -57,6 +80,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 		ofxUILabelButton *button = (ofxUILabelButton *) e.widget;
 		if (button->getValue() == 1){
 			cout << "Requesting hard stop" << endl;
+			sendOSC(OSC_ADDR_HARD_STOP,0);
 		}
     }
     
@@ -64,6 +88,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 		ofxUILabelButton *button = (ofxUILabelButton *) e.widget;
 		if (button->getValue() == 1){
 			cout << "Rewind" << endl;
+			sendOSC(OSC_ADDR_REWIND,0);
 		}
     }
 	
@@ -71,6 +96,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 		ofxUILabelButton *button = (ofxUILabelButton *) e.widget;
 		if (button->getValue() == 1){
 			cout << "Setting steps from 0-1" << endl;
+			sendOSC(OSC_ADDR_SET_01,4);
 		}
     }
 	
@@ -78,6 +104,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 		ofxUILabelButton *button = (ofxUILabelButton *) e.widget;
 		if (button->getValue() == 1){
 			cout << "Setting steps from 1-2" << endl;
+			sendOSC(OSC_ADDR_SET_12,8);
 		}
     }
 	
@@ -85,6 +112,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 		ofxUILabelButton *button = (ofxUILabelButton *) e.widget;
 		if (button->getValue() == 1){
 			cout << "Setting steps from 2-3" << endl;
+			sendOSC(OSC_ADDR_SET_23,12);
 		}
     }
 	
@@ -92,6 +120,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 		ofxUILabelButton *button = (ofxUILabelButton *) e.widget;
 		if (button->getValue() == 1){
 			cout << "Going forward 50 steps" << endl;
+			sendOSC(OSC_ADDR_FWD,50);
 		}
     }
 	
@@ -99,6 +128,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 		ofxUILabelButton *button = (ofxUILabelButton *) e.widget;
 		if (button->getValue() == 1){
 			cout << "Going back 50 steps" << endl;
+			sendOSC(OSC_ADDR_BACK,50);
 		}
     }
 	
@@ -106,6 +136,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 		ofxUILabelButton *button = (ofxUILabelButton *) e.widget;
 		if (button->getValue() == 1){
 			cout << "DEPLOY!" << endl;
+			sendOSC(OSC_ADDR_DEPLOY,0);
 		}
     }
 	
@@ -113,6 +144,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 		ofxUILabelButton *button = (ofxUILabelButton *) e.widget;
 		if (button->getValue() == 1){
 			cout << "UNDEPLOY!" << endl;
+			sendOSC(OSC_ADDR_UNDEPLOY,0);
 		}
     }
 	
