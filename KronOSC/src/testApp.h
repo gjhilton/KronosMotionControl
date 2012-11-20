@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxUI.h"
 
 class testApp : public ofBaseApp{
 
@@ -8,5 +9,8 @@ class testApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+	
+	ofxUICanvas *gui;
+	void guiEvent(ofxUIEventArgs &e);
 		
 };
