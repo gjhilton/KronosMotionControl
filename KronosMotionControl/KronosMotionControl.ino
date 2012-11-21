@@ -10,7 +10,7 @@ void setup() {
 		;
 	}
 #if defined _USE_SERIAL_CONTROLS
-	Serial.println("Send h for help");
+	Serial.println("Send (h) for help");
 	establishContact();
 #endif
 }
