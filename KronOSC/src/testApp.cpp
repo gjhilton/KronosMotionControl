@@ -10,7 +10,7 @@
 #define WIDGETNAME_DEPLOY "DEPLOY"
 #define WIDGETNAME_UNDEPLOY "UNDEPLOY"
 
-#define OSC_ADDR_HARD_STOP "/hardstop"
+#define OSC_ADDR_HARD_STOP "/1/light1"
 #define OSC_ADDR_REWIND "/rewind"
 #define OSC_ADDR_SET_01 "/set1"
 #define OSC_ADDR_SET_12 "/set2"
@@ -67,7 +67,8 @@ void testApp::draw(){
 void testApp::sendOSC(string address, int val=0){
 	ofxOscMessage m;
 	m.setAddress(address);
-	m.addIntArg(val);
+	m.addFloatArg(118.0);
+	m.addIntArg(118);
 	sender.sendMessage(m);
 	cout << "Send -> " << address << ":" << val << endl;
 }
