@@ -17,9 +17,8 @@ int main(int argc, const char * argv[])
 	// insert code here...
 	std::cout
 	<< "Hello, World!\n"
-	<< motor.getCurrentAbsoluteStep() << ","
-	<< motor.getCurrentRotation() << ","
-	<< motor.getCurrentStep() << ","
+	<< motor.getAbsoluteStep() << ","
+	<< motor.getRelativeStep()
 	;
     return 0;
 }

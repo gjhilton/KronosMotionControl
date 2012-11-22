@@ -67,7 +67,6 @@ void testApp::draw(){
 void testApp::sendOSC(string address, int val=0){
 	ofxOscMessage m;
 	m.setAddress(address);
-	m.addFloatArg(118.0);
 	m.addIntArg(118);
 	sender.sendMessage(m);
 	cout << "Send -> " << address << ":" << val << endl;

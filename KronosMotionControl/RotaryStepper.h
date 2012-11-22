@@ -6,19 +6,27 @@ public:
 	
     RotaryStepper();
 
-	float getCurrentAbsoluteDegrees();
-	int getCurrentAbsoluteStep();
-	int getCurrentRotation();
-	int getCurrentStep();
+	int getAbsoluteStep();
+	int getRelativeStep();
+	int getHomePos();
+	bool homeSet();
+	
+	void setHome(int step);
+	void setAtHome();
+
+	int goRelative(int nsteps);
+	
+	float stepToDegrees(int step);
+	float stepToRotations(int step);
 	
 protected:
 	
-	float stepToDegrees(int step);
-	
 private:
 	
-	int current_step;
-	int steps_per_rotation;
+	int abs_step;
+	int home_offset_steps;
+	
+	bool home_is_set;
 	
 };
 
