@@ -6,11 +6,11 @@
 RotaryStepper motor;
 
 void setup() {
+#if defined _USE_SERIAL_CONTROLS
 	Serial.begin(9600);
 	while (!Serial) {
 		;
 	}
-#if defined _USE_SERIAL_CONTROLS
 	Serial.println("Send (h) for help");
 	establishContact();
 #endif
