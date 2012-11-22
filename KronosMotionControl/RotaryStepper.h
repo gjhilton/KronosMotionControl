@@ -14,7 +14,8 @@ public:
 	void setHome(int step);
 	void setAtHome();
 
-	int goRelative(int nsteps);
+	void goHome();
+	void goRelative(int nsteps);
 	
 	float stepToDegrees(int step);
 	float stepToRotations(int step);

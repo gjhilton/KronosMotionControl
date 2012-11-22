@@ -27,6 +27,9 @@ void loop(){
 			case 's':
 				onSerialStatus();
 				break;
+			case '0':
+				onGoHome();
+				break;
 			case 'z':
 				onSetAtHome();
 				break;
@@ -80,6 +83,18 @@ void onSetAtHome(){
 #endif	
 }
 
+void onGoHome(){
+	motor.goHome();
+#if defined _USE_SERIAL_CONTROLS
+	if (motor.homeSet()){
+		Serial.println("Going home");
+		onSerialStatus();
+	} else {
+		Serial.println("Can't go home because it hasn't been set");
+	}
+#endif	
+}
+
 /*	---------------------------------------------------- 
 	COMMAND HANDLERS (serial only)
 	---------------------------------------------------- */
@@ -121,6 +136,8 @@ void onSerialHelp(){
 	Serial.println();
 	Serial.println(" h -> help");
 	Serial.println(" s -> show status");
+	Serial.println(" z -> set current position as home");
+	Serial.println(" 0 -> go to home position");
 	Serial.print  (" +/= -> forward by ");
 	printmanualincrement();
 	Serial.print  (" -/_ -> reverse by ");

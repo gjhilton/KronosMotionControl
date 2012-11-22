@@ -46,9 +46,16 @@ void RotaryStepper::setAtHome(){
 
 /* MOTOR DRIVING */
 
-int RotaryStepper::goRelative(int nsteps) {
+void RotaryStepper::goRelative(int nsteps) {
 	// TODO
 	abs_step += nsteps; // we won't do this here when the motor actually works
+}
+
+void RotaryStepper::goHome() {
+	// TODO
+	if (home_is_set){
+		abs_step = home_offset_steps; // we won't do this here when the motor actually works
+	}
 }
 
 /* UTILITIES */
