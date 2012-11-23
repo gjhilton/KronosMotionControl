@@ -24,6 +24,7 @@ public:
 
 	void goHome();
 	void goRelative(int nsteps);
+	void setSpeed(long speedRPM);
 	
 	void drive(int target);
 	
@@ -43,6 +44,7 @@ private:
 	int pin_1,pin_2,pin_3,pin_4;
 	int steps_per_rotation;
 	bool home_is_set;
+	unsigned long step_delay;    // delay between steps, in ms, based on speed
 	
 	
 	void initPins();

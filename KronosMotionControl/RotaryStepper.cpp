@@ -1,5 +1,7 @@
 #include "RotaryStepper.h"
 
+#define DEFAULT_SPEED_RPM 0.25
+
 /* CONSTRUCTOR */
 
 RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int motor_pin_1, int motor_pin_2, int motor_pin_3, int motor_pin_4) {
@@ -14,6 +16,7 @@ RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int motor_pin_1, 
 	pin_4 = motor_pin_4;
 	
 	initPins();
+	setSpeed(DEFAULT_SPEED_RPM);
 }
 
 /* GETTERS */
@@ -64,6 +67,10 @@ void RotaryStepper::drive(int target){
 	stepMotor(1);
 	stepMotor(2);
 	stepMotor(3);
+}
+
+void RotaryStepper::setSpeed(long speedRPM){
+	step_delay = 60L * 1000L / steps_per_rotation / speedRPM;
 }
 
 /* HARDWARE INTERFACE */
