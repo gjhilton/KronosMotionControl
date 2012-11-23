@@ -60,7 +60,10 @@ void RotaryStepper::goHome() {
 }
 
 void RotaryStepper::drive(int target){
+	stepMotor(0);
 	stepMotor(1);
+	stepMotor(2);
+	stepMotor(3);
 }
 
 /* HARDWARE INTERFACE */
@@ -133,6 +136,6 @@ float RotaryStepper::stepToRotations(int step){
 
 #ifdef _SIMULATOR
 void RotaryStepper::report(string s){
-	cout << "RotaryStepper: " << s;
+	cout << "RotaryStepper: " << s << "\n";
 }
 #endif
