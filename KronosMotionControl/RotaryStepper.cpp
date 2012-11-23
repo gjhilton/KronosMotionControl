@@ -3,16 +3,14 @@
 #endif
 #include "RotaryStepper.h"
 
-/* CONFIGURATION */
-
-#define STEPS_PER_ROTATION 200
-
 /* CONSTRUCTOR */
 
-RotaryStepper::RotaryStepper() {
+RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int motor_pin_1, int motor_pin_2, int motor_pin_3, int motor_pin_4) {
+	steps_per_rotation = number_of_steps_per_rotation;
 	abs_step = 0;
 	home_is_set = false;
 	home_offset_steps = 0;
+	
 }
 
 /* GETTERS */
@@ -58,12 +56,16 @@ void RotaryStepper::goHome() {
 	}
 }
 
+void RotaryStepper::drive(int target){
+	
+}
+
 /* UTILITIES */
 
 float RotaryStepper::stepToDegrees(int step){
-	return step * (360.0/STEPS_PER_ROTATION);
+	return step * (360.0/steps_per_rotation);
 }
 
 float RotaryStepper::stepToRotations(int step){
-	return float(step)/STEPS_PER_ROTATION;
+	return float(step)/steps_per_rotation;
 }

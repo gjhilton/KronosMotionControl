@@ -1,9 +1,10 @@
 #define _USE_SERIAL_CONTROLS
 #define MANUAL_DRIVE_NSTEPS 10
+#define STEPS_PER_ROTATION 200
 
 #include "RotaryStepper.h"
 
-RotaryStepper motor;
+RotaryStepper motor(STEPS_PER_ROTATION,8,9,10,11);
 
 void setup() {
 #if defined _USE_SERIAL_CONTROLS

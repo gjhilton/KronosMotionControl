@@ -1,25 +1,24 @@
 //
 //  main.cpp
 //  KronosMotionControlSimulator
-//
-//  Created by g j hilton on 20/11/2012.
-//  Copyright (c) 2012 hltn co. All rights reserved.
-//
 
 #include <iostream>
 #include "RotaryStepper.h"
 
-RotaryStepper motor;
+#define STEPS_PER_ROTATION 200
 
-int main(int argc, const char * argv[])
-{
+RotaryStepper motor(STEPS_PER_ROTATION,8,9,10,11);
 
-	// insert code here...
+void testDrive(){
 	std::cout
-	<< "Hello, World!\n"
+	<< "Testing drive\n"
 	<< motor.getAbsoluteStep() << ","
 	<< motor.getRelativeStep()
 	;
-    return 0;
 }
 
+int main(int argc, const char * argv[]) {
+
+	testDrive();
+    return 0;
+}
