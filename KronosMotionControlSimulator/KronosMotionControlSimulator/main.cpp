@@ -7,9 +7,7 @@
 #include "RotaryStepper.h"
 using namespace std;
 
-#define STEPS_PER_ROTATION 200
-
-RotaryStepper motor(STEPS_PER_ROTATION,8,9,10,11);
+RotaryStepper motor(200,8,9,10,11);
 
 string home(){
 	stringstream sstr;
@@ -30,10 +28,10 @@ void testDrive(){
 	status();
 	cout << "Testing drive\n";
 	motor.drive(1);
+	status();
 }
 
 int main(int argc, const char * argv[]) {
-
 	testDrive();
     return 0;
 }

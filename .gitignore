@@ -6,3 +6,5 @@ KronOSC/bin/data/GUI/.DS_Store
 KronOSC/.DS_Store
 
 .DS_Store
+
+*.xcuserstate
