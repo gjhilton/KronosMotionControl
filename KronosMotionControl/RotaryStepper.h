@@ -1,6 +1,14 @@
 #ifndef __KronosMotionControlSimulator__RotaryStepper__
 #define __KronosMotionControlSimulator__RotaryStepper__
 
+#ifdef _SIMULATOR
+	#include <string>
+	#include <iostream>
+	using namespace std;
+#else
+	#include "Arduino.h"
+#endif
+
 class RotaryStepper{
 public:
 	
@@ -17,8 +25,14 @@ public:
 	void goHome();
 	void goRelative(int nsteps);
 	
+	void drive(int target);
+	
 	float stepToDegrees(int step);
 	float stepToRotations(int step);
+
+#ifdef _SIMULATOR
+	void report(string s);
+#endif
 	
 protected:
 	
@@ -26,11 +40,13 @@ private:
 	
 	int abs_step;
 	int home_offset_steps;
+	int pin_1,pin_2,pin_3,pin_4;
 	int steps_per_rotation;
 	bool home_is_set;
 	
-	void drive(int target);
 	
+	void initPins();
+	void stepMotor(int thisStep);
 };
 
 #endif
