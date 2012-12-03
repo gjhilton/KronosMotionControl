@@ -22,6 +22,7 @@ RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int pin_1, int pi
 	initPins();
 	// setSpeed(DEFAULT_SPEED_RPM);
 	step_delay = 5;
+	
 }
 
 /*	---------------------------------------------------- 

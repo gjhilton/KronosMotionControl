@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3B033BC9165D8ED400CA4EE4 /* RotaryStepper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B033BC7165D8ED400CA4EE4 /* RotaryStepper.cpp */; };
 		3B815AC9165C3D7300F9F35B /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B815AC8165C3D7300F9F35B /* main.cpp */; };
+		3BBCD584166D17A800AC4DE4 /* interpolation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3BBCD583166D17A800AC4DE4 /* interpolation.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,6 +30,7 @@
 		3B564C33166D09960075F593 /* interpolation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = interpolation.h; path = ../KronosMotionControl/interpolation.h; sourceTree = "<group>"; };
 		3B815AC4165C3D7300F9F35B /* KronosMotionControlSimulator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = KronosMotionControlSimulator; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B815AC8165C3D7300F9F35B /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		3BBCD583166D17A800AC4DE4 /* interpolation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = interpolation.cpp; path = ../KronosMotionControl/interpolation.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +50,7 @@
 				3B033BC7165D8ED400CA4EE4 /* RotaryStepper.cpp */,
 				3B033BC8165D8ED400CA4EE4 /* RotaryStepper.h */,
 				3B564C33166D09960075F593 /* interpolation.h */,
+				3BBCD583166D17A800AC4DE4 /* interpolation.cpp */,
 			);
 			name = KronosMotionControl;
 			sourceTree = "<group>";
@@ -131,6 +134,7 @@
 			files = (
 				3B815AC9165C3D7300F9F35B /* main.cpp in Sources */,
 				3B033BC9165D8ED400CA4EE4 /* RotaryStepper.cpp in Sources */,
+				3BBCD584166D17A800AC4DE4 /* interpolation.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

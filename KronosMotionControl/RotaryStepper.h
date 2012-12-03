@@ -10,6 +10,8 @@
 	#include "Arduino.h"
 #endif
 
+#include "interpolation.h"
+
 class RotaryStepper{
 public:
 	
