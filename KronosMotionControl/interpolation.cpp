@@ -49,6 +49,15 @@ inline float _inlineQuartIn (float t, float b, float c, float d){
 inline float _inlineQuartOut (float t, float b, float c, float d){
 	return -c * ((t=t/d-1)*t*t*t - 1) + b;
 }
+inline float _inlineSine (float t, float b, float c, float d){
+	return -c*0.5 * (cos(_PI*t/d) - 1) + b;
+}
+inline float _inlineSineIn (float t, float b, float c, float d){
+	return -c * cos(t/d * _HALF_PI) + c + b;
+}
+inline float _inlineSineOut (float t, float b, float c, float d){
+	return c * sin(t/d * _HALF_PI) + b;
+}
 
 // DIRECT API
 
@@ -91,6 +100,16 @@ float interpolateQuartIn (float t, float b, float c, float d){
 float interpolateQuartOut (float t, float b, float c, float d){
 	return _inlineQuartOut(t,b,c,d);
 }
+float interpolateSine (float t, float b, float c, float d){
+	return _inlineSine(t,b,c,d);
+}
+float interpolateSineIn (float t, float b, float c, float d){
+	return _inlineSineIn(t,b,c,d);
+}
+float interpolateSineOut (float t, float b, float c, float d){
+	return _inlineSineOut(t,b,c,d);
+}
+
 
 // MULTIPLEXED API
 
@@ -122,6 +141,12 @@ float interpolate(float t, float b, float c, float d, Interpolation kind = LINEA
 			return _inlineQuartIn(t,b,c,d);
 		case QUART_OUT:
 			return _inlineQuartOut(t,b,c,d);
+		case SINE:
+			return _inlineSine(t,b,c,d);
+		case SINE_IN:
+			return _inlineSineIn(t,b,c,d);
+		case SINE_OUT:
+			return _inlineSineOut(t,b,c,d);
 	}
 	return 0; // can't happen
 }

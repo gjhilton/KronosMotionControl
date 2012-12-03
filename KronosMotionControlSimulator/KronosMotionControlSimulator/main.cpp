@@ -105,6 +105,15 @@ void testInterpolation(){
 	cout << "QUART_OUT\n";
 	interp(QUART_OUT);
 	
+	cout << "SINE\n";
+	interp(SINE);
+	
+	cout << "SINE_IN\n";
+	interp(SINE_IN);
+	
+	cout << "QUART_OUT\n";
+	interp(SINE_OUT);
+	
 }
 
 int main(int argc, const char * argv[]) {

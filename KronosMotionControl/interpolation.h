@@ -4,6 +4,9 @@
 #ifndef interpolation_h
 #define interpolation_h
 
+#define _PI 3.14159265358979
+#define _HALF_PI 1.5707963267949
+
 enum Interpolation {
 	CIRCULAR,
 	CIRCULAR_IN,
@@ -17,7 +20,10 @@ enum Interpolation {
 	QUAD_OUT,
 	QUART,
 	QUART_IN,
-	QUART_OUT
+	QUART_OUT,
+	SINE,
+	SINE_IN,
+	SINE_OUT
 };
 
 /*
@@ -48,5 +54,9 @@ float interpolateCubicOut (float t, float b, float c, float d);
 float interpolateQuart (float t, float b, float c, float d);
 float interpolateQuartIn (float t, float b, float c, float d);
 float interpolateQuartOut (float t, float b, float c, float d);
+
+float interpolateSine (float t, float b, float c, float d);
+float interpolateSineIn (float t, float b, float c, float d);
+float interpolateSineOut (float t, float b, float c, float d);
 
 #endif
