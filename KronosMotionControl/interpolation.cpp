@@ -39,6 +39,16 @@ inline float _inlineCubicIn (float t, float b, float c, float d){
 inline float _inlineCubicOut (float t, float b, float c, float d){
 	return c*((t=t/d-1)*t*t + 1) + b;
 }
+inline float _inlineQuart (float t, float b, float c, float d){
+	if ((t/=d*0.5) < 1) return c*0.5*t*t*t*t + b;
+	return -c*0.5 * ((t-=2)*t*t*t - 2) + b;
+}
+inline float _inlineQuartIn (float t, float b, float c, float d){
+	return c*(t/=d)*t*t*t + b;
+}
+inline float _inlineQuartOut (float t, float b, float c, float d){
+	return -c * ((t=t/d-1)*t*t*t - 1) + b;
+}
 
 // DIRECT API
 
@@ -72,6 +82,15 @@ float interpolateCubicIn (float t, float b, float c, float d){
 float interpolateCubicOut (float t, float b, float c, float d){
 	return _inlineCubicOut(t,b,c,d);
 }
+float interpolateQuart (float t, float b, float c, float d){
+	return _inlineQuart(t,b,c,d);
+}
+float interpolateQuartIn (float t, float b, float c, float d){
+	return _inlineQuartIn(t,b,c,d);
+}
+float interpolateQuartOut (float t, float b, float c, float d){
+	return _inlineQuartOut(t,b,c,d);
+}
 
 // MULTIPLEXED API
 
@@ -97,50 +116,12 @@ float interpolate(float t, float b, float c, float d, Interpolation kind = LINEA
 			return _inlineCubicIn(t,b,c,d);
 		case CUBIC_OUT:
 			return _inlineCubicOut(t,b,c,d);
+		case QUART:
+			return _inlineQuart(t,b,c,d);
+		case QUART_IN:
+			return _inlineQuartIn(t,b,c,d);
+		case QUART_OUT:
+			return _inlineQuartOut(t,b,c,d);
 	}
 	return 0; // can't happen
 }
-
-// CONVENIENCE TEMPLATE FOR ADDING NEW FUNCTIONS
-/*
- 
- // HEADER FILE
- 
- float interpolateFUNC (float t, float b, float c, float d);
- float interpolateFUNCIn (float t, float b, float c, float d);
- float interpolateFUNCOut (float t, float b, float c, float d);
- 
- // INLINE
- 
- inline float _inlineFUNC (float t, float b, float c, float d){
- 
- }
- inline float _inlineFUNCIn (float t, float b, float c, float d){
- 
- }
- inline float _inlineFUNCOut (float t, float b, float c, float d){
- 
- }
- 
- // DIRECT API
- 
- float interpolateFUNC (float t, float b, float c, float d){
- return _inlineFUNC(t,b,c,d);
- }
- float interpolateFUNCIn (float t, float b, float c, float d){
- return _inlineFUNCIn(t,b,c,d);
- }
- float interpolateFUNCOut (float t, float b, float c, float d){
- return _inlineFUNCOut(t,b,c,d);
- }
- 
- // MULTIPLEXED API
- 
- case FUNC:
- return _inlineFUNC(t,b,c,d);
- case FUNC_IN:
- return _inlineFUNCIn(t,b,c,d);
- case FUNC_OUT:
- return _inlineFUNCOut(t,b,c,d);
- 
- */

@@ -96,14 +96,14 @@ void testInterpolation(){
 	cout << "CIRCULAR_OUT\n";
 	interp(CIRCULAR_OUT);
 	
-	cout << "CUBIC\n";
-	interp(CUBIC);
+	cout << "QUART\n";
+	interp(QUART);
 	
-	cout << "CUBIC_IN\n";
-	interp(CUBIC_IN);
+	cout << "QUART_IN\n";
+	interp(QUART_IN);
 	
-	cout << "CUBIC_OUT\n";
-	interp(CUBIC_OUT);
+	cout << "QUART_OUT\n";
+	interp(QUART_OUT);
 	
 }
 

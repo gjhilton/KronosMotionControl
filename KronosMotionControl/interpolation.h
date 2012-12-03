@@ -14,7 +14,10 @@ enum Interpolation {
 	LINEAR,
 	QUAD,
 	QUAD_IN,
-	QUAD_OUT
+	QUAD_OUT,
+	QUART,
+	QUART_IN,
+	QUART_OUT
 };
 
 /*
@@ -41,5 +44,9 @@ float interpolateQuadOut (float t, float b, float c, float d);
 float interpolateCubic (float t, float b, float c, float d);
 float interpolateCubicIn (float t, float b, float c, float d);
 float interpolateCubicOut (float t, float b, float c, float d);
+
+float interpolateQuart (float t, float b, float c, float d);
+float interpolateQuartIn (float t, float b, float c, float d);
+float interpolateQuartOut (float t, float b, float c, float d);
 
 #endif
