@@ -26,6 +26,7 @@
 /* Begin PBXFileReference section */
 		3B033BC7165D8ED400CA4EE4 /* RotaryStepper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RotaryStepper.cpp; path = ../KronosMotionControl/RotaryStepper.cpp; sourceTree = "<group>"; };
 		3B033BC8165D8ED400CA4EE4 /* RotaryStepper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RotaryStepper.h; path = ../KronosMotionControl/RotaryStepper.h; sourceTree = "<group>"; };
+		3B564C33166D09960075F593 /* interpolation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = interpolation.h; path = ../KronosMotionControl/interpolation.h; sourceTree = "<group>"; };
 		3B815AC4165C3D7300F9F35B /* KronosMotionControlSimulator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = KronosMotionControlSimulator; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B815AC8165C3D7300F9F35B /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -46,6 +47,7 @@
 			children = (
 				3B033BC7165D8ED400CA4EE4 /* RotaryStepper.cpp */,
 				3B033BC8165D8ED400CA4EE4 /* RotaryStepper.h */,
+				3B564C33166D09960075F593 /* interpolation.h */,
 			);
 			name = KronosMotionControl;
 			sourceTree = "<group>";

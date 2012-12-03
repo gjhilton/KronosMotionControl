@@ -5,6 +5,8 @@
 #include <iostream>
 #include <sstream>
 #include "RotaryStepper.h"
+#include "interpolation.h"
+
 using namespace std;
 
 RotaryStepper motor(200,8,9,10,11);
@@ -61,8 +63,37 @@ void testDrive(){
 	}
 }
 
+void interp(Interpolation kind = LINEAR){
+	float b = 0;	// the initial value of the animation property
+	float c = 10;	// the total change in the animation property
+	float d = 10;	// the duration of the motion
+	for (float t = 0; t<= d; t++){
+		cout << t << "/" << d  << ": \t" << interpolate(t,b,c,d,kind) << "\n";
+	}
+	cout << "\n";
+}
+
+void testInterpolation(){
+	
+	cout << "Testing interpolation\n\nLINEAR\n";
+	interp();
+	
+	cout << "QUAD_EASE\n";
+	interp(QUAD_EASE);
+	
+	cout << "QUAD_EASE_IN\n";
+	interp(QUAD_EASE_IN);
+	
+	cout << "QUAD_EASE_OUT\n";
+	interp(QUAD_EASE_OUT);
+	
+}
+
 int main(int argc, const char * argv[]) {
-	testDrive();
-	testHome();
-    return 0;
+	//testDrive();
+	//testHome();
+    testInterpolation();
+	
+	
+	return 0;
 }
