@@ -5,10 +5,13 @@
 #define interpolation_h
 
 enum Interpolation {
+	CIRCULAR,
+	CIRCULAR_IN,
+	CIRCULAR_OUT,
 	LINEAR,
-	QUAD_EASE,
-	QUAD_EASE_IN,
-	QUAD_EASE_OUT
+	QUAD,
+	QUAD_IN,
+	QUAD_OUT
 };
 
 /*
@@ -21,5 +24,17 @@ enum Interpolation {
 */
 
 float interpolate(float t, float b, float c, float d, Interpolation kind);
+
+float interpolateCirc (float t, float b, float c, float d);
+float interpolateCircIn (float t, float b, float c, float d);
+float interpolateCircOut (float t, float b, float c, float d);
+
+float interpolateLinear (float t, float b, float c, float d);
+
+float interpolateQuad (float t, float b, float c, float d);
+float interpolateQuadIn (float t, float b, float c, float d);
+float interpolateQuadOut (float t, float b, float c, float d);
+
+
 
 #endif

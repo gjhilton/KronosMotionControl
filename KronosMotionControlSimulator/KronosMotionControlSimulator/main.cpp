@@ -78,14 +78,23 @@ void testInterpolation(){
 	cout << "Testing interpolation\n\nLINEAR\n";
 	interp();
 	
-	cout << "QUAD_EASE\n";
-	interp(QUAD_EASE);
+	cout << "QUAD\n";
+	interp(QUAD);
 	
-	cout << "QUAD_EASE_IN\n";
-	interp(QUAD_EASE_IN);
+	cout << "QUAD_IN\n";
+	interp(QUAD_IN);
 	
-	cout << "QUAD_EASE_OUT\n";
-	interp(QUAD_EASE_OUT);
+	cout << "QUAD_OUT\n";
+	interp(QUAD_OUT);
+	
+	cout << "CIRCULAR\n";
+	interp(CIRCULAR);
+	
+	cout << "CIRCULAR_IN\n";
+	interp(CIRCULAR_IN);
+	
+	cout << "CIRCULAR_OUT\n";
+	interp(CIRCULAR_OUT);
 	
 }
 
