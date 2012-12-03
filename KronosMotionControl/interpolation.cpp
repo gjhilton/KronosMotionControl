@@ -58,6 +58,18 @@ inline float _inlineSineIn (float t, float b, float c, float d){
 inline float _inlineSineOut (float t, float b, float c, float d){
 	return c * sin(t/d * _HALF_PI) + b;
 }
+inline float _inlineExpo (float t, float b, float c, float d){
+	if (t==0) return b;
+	if (t==d) return b+c;
+	if ((t/=d*0.5) < 1) return c*0.5 * pow(2, 10 * (t - 1)) + b;
+	return c*0.5 * (-pow(2, -10 * --t) + 2) + b;
+}
+inline float _inlineExpoIn (float t, float b, float c, float d){
+	return (t==0) ? b : c * pow(2, 10 * (t/d - 1)) + b - c * 0.001;
+}
+inline float _inlineExpoOut (float t, float b, float c, float d){
+	return (t==d) ? b+c : c * (-pow(2, -10 * t/d) + 1) + b;
+}
 
 // DIRECT API
 
@@ -109,7 +121,15 @@ float interpolateSineIn (float t, float b, float c, float d){
 float interpolateSineOut (float t, float b, float c, float d){
 	return _inlineSineOut(t,b,c,d);
 }
-
+float interpolateExpo (float t, float b, float c, float d){
+	return _inlineExpo(t,b,c,d);
+}
+float interpolateExpoIn (float t, float b, float c, float d){
+	return _inlineExpoIn(t,b,c,d);
+}
+float interpolateExpoOut (float t, float b, float c, float d){
+	return _inlineExpoOut(t,b,c,d);
+}
 
 // MULTIPLEXED API
 
@@ -147,6 +167,12 @@ float interpolate(float t, float b, float c, float d, Interpolation kind = LINEA
 			return _inlineSineIn(t,b,c,d);
 		case SINE_OUT:
 			return _inlineSineOut(t,b,c,d);
+		case EXPO:
+			return _inlineExpo(t,b,c,d);
+		case EXPO_IN:
+			return _inlineExpoIn(t,b,c,d);
+		case EXPO_OUT:
+			return _inlineExpoOut(t,b,c,d);
 	}
 	return 0; // can't happen
 }

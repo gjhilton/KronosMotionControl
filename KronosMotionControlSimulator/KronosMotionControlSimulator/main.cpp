@@ -111,8 +111,17 @@ void testInterpolation(){
 	cout << "SINE_IN\n";
 	interp(SINE_IN);
 	
-	cout << "QUART_OUT\n";
+	cout << "SINE_OUT\n";
 	interp(SINE_OUT);
+	
+	cout << "EXPO\n";
+	interp(EXPO);
+	
+	cout << "EXPO_IN\n";
+	interp(EXPO_IN);
+	
+	cout << "EXPO_OUT\n";
+	interp(EXPO_OUT);
 	
 }
 

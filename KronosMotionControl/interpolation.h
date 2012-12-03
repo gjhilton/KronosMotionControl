@@ -14,6 +14,9 @@ enum Interpolation {
 	CUBIC,
 	CUBIC_IN,
 	CUBIC_OUT,
+	EXPO,
+	EXPO_IN,
+	EXPO_OUT,
 	LINEAR,
 	QUAD,
 	QUAD_IN,
@@ -58,5 +61,9 @@ float interpolateQuartOut (float t, float b, float c, float d);
 float interpolateSine (float t, float b, float c, float d);
 float interpolateSineIn (float t, float b, float c, float d);
 float interpolateSineOut (float t, float b, float c, float d);
+
+float interpolateExpo (float t, float b, float c, float d);
+float interpolateExpoIn (float t, float b, float c, float d);
+float interpolateExpoOut (float t, float b, float c, float d);
 
 #endif
