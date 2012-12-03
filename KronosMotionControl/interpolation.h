@@ -8,6 +8,9 @@ enum Interpolation {
 	CIRCULAR,
 	CIRCULAR_IN,
 	CIRCULAR_OUT,
+	CUBIC,
+	CUBIC_IN,
+	CUBIC_OUT,
 	LINEAR,
 	QUAD,
 	QUAD_IN,
@@ -35,6 +38,8 @@ float interpolateQuad (float t, float b, float c, float d);
 float interpolateQuadIn (float t, float b, float c, float d);
 float interpolateQuadOut (float t, float b, float c, float d);
 
-
+float interpolateCubic (float t, float b, float c, float d);
+float interpolateCubicIn (float t, float b, float c, float d);
+float interpolateCubicOut (float t, float b, float c, float d);
 
 #endif

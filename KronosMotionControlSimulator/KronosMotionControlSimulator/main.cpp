@@ -96,6 +96,15 @@ void testInterpolation(){
 	cout << "CIRCULAR_OUT\n";
 	interp(CIRCULAR_OUT);
 	
+	cout << "CUBIC\n";
+	interp(CUBIC);
+	
+	cout << "CUBIC_IN\n";
+	interp(CUBIC_IN);
+	
+	cout << "CUBIC_OUT\n";
+	interp(CUBIC_OUT);
+	
 }
 
 int main(int argc, const char * argv[]) {
