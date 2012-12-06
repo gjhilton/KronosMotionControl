@@ -10,6 +10,7 @@
 	#include "Arduino.h"
 #endif
 
+#include "Keyframe.h"
 #include "interpolation.h"
 
 class RotaryStepper{
@@ -58,6 +59,7 @@ private:
 	bool home_is_set;
 	unsigned long step_delay;    // delay between steps, in ms, based on speed
 	
+	int keyframes[];
 	
 	void initPins();
 	void stepMotor();

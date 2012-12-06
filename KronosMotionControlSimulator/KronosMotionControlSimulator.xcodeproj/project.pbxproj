@@ -10,6 +10,7 @@
 		3B033BC9165D8ED400CA4EE4 /* RotaryStepper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B033BC7165D8ED400CA4EE4 /* RotaryStepper.cpp */; };
 		3B815AC9165C3D7300F9F35B /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B815AC8165C3D7300F9F35B /* main.cpp */; };
 		3BBCD584166D17A800AC4DE4 /* interpolation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3BBCD583166D17A800AC4DE4 /* interpolation.cpp */; };
+		3BC288C51670E89100F368D1 /* Keyframe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3BC288C31670E89100F368D1 /* Keyframe.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,6 +32,8 @@
 		3B815AC4165C3D7300F9F35B /* KronosMotionControlSimulator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = KronosMotionControlSimulator; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B815AC8165C3D7300F9F35B /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		3BBCD583166D17A800AC4DE4 /* interpolation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = interpolation.cpp; path = ../KronosMotionControl/interpolation.cpp; sourceTree = "<group>"; };
+		3BC288C31670E89100F368D1 /* Keyframe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Keyframe.cpp; path = ../KronosMotionControl/Keyframe.cpp; sourceTree = "<group>"; };
+		3BC288C41670E89100F368D1 /* Keyframe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Keyframe.h; path = ../KronosMotionControl/Keyframe.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,6 +52,8 @@
 			children = (
 				3B033BC7165D8ED400CA4EE4 /* RotaryStepper.cpp */,
 				3B033BC8165D8ED400CA4EE4 /* RotaryStepper.h */,
+				3BC288C31670E89100F368D1 /* Keyframe.cpp */,
+				3BC288C41670E89100F368D1 /* Keyframe.h */,
 				3B564C33166D09960075F593 /* interpolation.h */,
 				3BBCD583166D17A800AC4DE4 /* interpolation.cpp */,
 			);
@@ -135,6 +140,7 @@
 				3B815AC9165C3D7300F9F35B /* main.cpp in Sources */,
 				3B033BC9165D8ED400CA4EE4 /* RotaryStepper.cpp in Sources */,
 				3BBCD584166D17A800AC4DE4 /* interpolation.cpp in Sources */,
+				3BC288C51670E89100F368D1 /* Keyframe.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
