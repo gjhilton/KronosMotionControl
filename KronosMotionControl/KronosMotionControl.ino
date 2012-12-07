@@ -133,6 +133,7 @@ void onGoHome(){
 	---------------------------------------------------- */
 
 #if defined _USE_SERIAL
+
 void serialBegin(){
 	Serial.begin(9600);
 	while (!Serial) {

@@ -10,13 +10,14 @@
 	#include "Arduino.h"
 #endif
 
-#include "Keyframe.h"
 #include "interpolation.h"
+
+#define DEFAULT_N_KEYFRAMES 3
 
 class RotaryStepper{
 public:
 	
-    RotaryStepper(int number_of_steps_per_rotation, int motor_pin_1, int motor_pin_2, int motor_pin_3, int motor_pin_4);
+    RotaryStepper(int number_of_steps_per_rotation, int motor_pin_1, int motor_pin_2, int motor_pin_3, int motor_pin_4, int n_keyframes = DEFAULT_N_KEYFRAMES);
 	
 	int getAbsoluteStep();
 	int getRelativeStep();
@@ -33,9 +34,13 @@ public:
 	void driveHome();
 	void driveByRelative(int nsteps);
 	void driveToAbsoluteTarget(int abs_target);
+	void driveToKeyframe(int index);
 	
 	float stepToDegrees(int step);
 	float stepToRotations(int step);
+	
+	void setKeyframe(int index, int value);
+	void setKeyframeHere(int index);
 
 #ifdef _SIMULATOR
 	void report(string s);
@@ -44,6 +49,9 @@ public:
 #endif
 	
 protected:
+	
+	void initPins();
+	void stepMotor();
 	
 private:
 	
@@ -59,10 +67,9 @@ private:
 	bool home_is_set;
 	unsigned long step_delay;    // delay between steps, in ms, based on speed
 	
-	int keyframes[];
-	
-	void initPins();
-	void stepMotor();
+	int * keyframes;
+	bool * keyframes_set;
+
 };
 
 #endif

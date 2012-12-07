@@ -6,7 +6,7 @@
 	CONSTRUCTOR
 	---------------------------------------------------- */
 
-RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int pin_1, int pin_2, int pin_3, int pin_4) {
+RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int pin_1, int pin_2, int pin_3, int pin_4, int n_keyframes) {
 	abs_step = 0;
 	home_is_set = false;
 	home_offset_steps = 0;
@@ -19,8 +19,11 @@ RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int pin_1, int pi
 	motor_pin_3 = pin_3;
 	motor_pin_4 = pin_4;
 	
+	// keyframes = new int [n_keyframes];
+	// keyframes_set = new bool [n_keyframes];
+	
 	initPins();
-	// setSpeed(DEFAULT_SPEED_RPM);
+
 	step_delay = 5;
 	
 }
