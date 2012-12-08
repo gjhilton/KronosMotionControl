@@ -66,7 +66,6 @@ void onOSCNotImplemented(OSCMessage *_mes = 0){
 
 void oscBegin(){
 	Ethernet.begin(myMac ,myIp);
-	serialSetcallback(&onOSCNotImplemented);
 	server.begin(serverPort);
 	server.addCallback(OSCADDR_FORWARD_STEP, 	&onOSCNotImplemented);
 	server.addCallback(OSCADDR_REWIND_STEP, 	&onOSCNotImplemented);
