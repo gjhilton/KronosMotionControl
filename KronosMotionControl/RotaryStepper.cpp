@@ -79,7 +79,7 @@ bool RotaryStepper::setKeyframeHere(int index){
 }
 
 int RotaryStepper::getKeyframeAbsolute(int index){
-	return getKeyframeRelativeToHome(index) - home_offset_steps;
+	return getKeyframeRelativeToHome(index) + home_offset_steps;
 }
 
 int RotaryStepper::getKeyframeRelativeToHome(int index){

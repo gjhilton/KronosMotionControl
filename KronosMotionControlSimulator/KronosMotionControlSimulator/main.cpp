@@ -127,17 +127,53 @@ void testInterpolation(){
 
 void testKeyframes(){
 	cout << "\n\n***** TESTING Keyframes ****\n\n";
-	status();
-
 	
+	cout << "> keyframe shouldn't be set if home isn't set \n";
+	bool expectedtofail = motor.setKeyframeHere(0);
+	cout << "0 " << expectedtofail << "\n";
+	cout << "\n";
 	
+	cout << "> set home at abs 200 \n";
+	motor.driveToAbsoluteTarget(0);
+	cout << "0 " << motor.getAbsoluteStep() << "\n";
+	motor.driveToAbsoluteTarget(200);
+	cout << "200 " << motor.getAbsoluteStep() << "\n";
+	motor.setAtHome();
+	cout << "0 " << motor.getRelativeStep() << "\n";
+	cout << "\n";
+	
+	cout << "> go to abs 300 / home +100  and set keyframe 0  \n";
+	motor.driveByRelative(100);
+	cout << "300 " << motor.getAbsoluteStep() << "\n";
+	motor.setKeyframeHere(0);
+	cout << "100 " << motor.getKeyframeRelativeToHome(0) << "\n";
+	cout << "300 " << motor.getKeyframeAbsolute(0) << "\n";
+	cout << "\n";
+	
+	cout << "> go to abs 1 then try to return to keyframe  \n";
+	motor.driveByRelative(-299);
+	cout << "1 " << motor.getAbsoluteStep() << "\n";
+	motor.driveToKeyframe(0);
+	cout << "300 " << motor.getAbsoluteStep() << "\n";
+	cout << "\n";
+	
+	cout << "> attempt to set invalid keyframe  \n";
+	expectedtofail = motor.setKeyframeHere(1000);
+	cout << "0 " << expectedtofail << "\n";
+	cout << "\n";
+	
+	cout << "> attempt to set numeric keyframe, then go to it  \n";
+	motor.setKeyframeRelativeToHome(1, 400);
+	motor.driveToKeyframe(1);
+	cout << "600 " << motor.getAbsoluteStep() << "\n";
+	cout << "\n";
 }
 
 int main(int argc, const char * argv[]) {
 	//testDrive();
 	//testHome();
     //testInterpolation();
-	testKeyframes();
+	// testKeyframes();
 	
 	return 0;
 }
