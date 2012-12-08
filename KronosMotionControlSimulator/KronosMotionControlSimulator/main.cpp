@@ -126,6 +126,10 @@ void testInterpolation(){
 }
 
 void testKeyframes(){
+	cout << "\n\n***** TESTING Keyframes ****\n\n";
+	status();
+
+	
 	
 }
 

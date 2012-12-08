@@ -1,12 +1,10 @@
 #include "RotaryStepper.h"
 
-#define DEFAULT_SPEED_RPM 1
-
 /*	---------------------------------------------------- 
 	CONSTRUCTOR
 	---------------------------------------------------- */
 
-RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int pin_1, int pin_2, int pin_3, int pin_4, int n_keyframes) {
+RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int pin_1, int pin_2, int pin_3, int pin_4) {
 	abs_step = 0;
 	home_is_set = false;
 	home_offset_steps = 0;
@@ -18,9 +16,6 @@ RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int pin_1, int pi
 	motor_pin_2 = pin_2;
 	motor_pin_3 = pin_3;
 	motor_pin_4 = pin_4;
-	
-	// keyframes = new int [n_keyframes];
-	// keyframes_set = new bool [n_keyframes];
 	
 	initPins();
 
@@ -67,6 +62,35 @@ void RotaryStepper::setSpeed(long speedRPM){
 }
 
 /*	---------------------------------------------------- 
+	KEYFRAMES
+	---------------------------------------------------- */
+
+bool RotaryStepper::setKeyframeRelativeToHome(int index, int value){
+	if (index < MAX_N_KEYFRAMES){
+		keyframes[index] = value;
+		keyframes_set[index] = true;
+		return true;
+	}
+	return false;
+}
+
+bool RotaryStepper::setKeyframeHere(int index){
+	return homeSet() && setKeyframeRelativeToHome(index, getRelativeStep());
+}
+
+int RotaryStepper::getKeyframeAbsolute(int index){
+	return getKeyframeRelativeToHome(index) - home_offset_steps;
+}
+
+int RotaryStepper::getKeyframeRelativeToHome(int index){
+	if ((index < MAX_N_KEYFRAMES) && (keyframes_set[index])){
+		return keyframes[index];
+	} else {
+		return 0; // hard to know a good value for an invalid keyframe
+	}
+}
+
+/*	---------------------------------------------------- 
 	MOTOR DRIVING
 	---------------------------------------------------- */
 
@@ -78,6 +102,10 @@ void RotaryStepper::driveHome() {
 	if (home_is_set){
 		driveToAbsoluteTarget(getHomePos());
 	}
+}
+
+void RotaryStepper::driveToKeyframe(int index){
+	driveToAbsoluteTarget(getKeyframeAbsolute(index));
 }
 
 void RotaryStepper::driveToAbsoluteTarget(int abs_target){

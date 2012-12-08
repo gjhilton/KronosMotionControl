@@ -12,12 +12,13 @@
 
 #include "interpolation.h"
 
-#define DEFAULT_N_KEYFRAMES 3
+#define MAX_N_KEYFRAMES 3
+#define DEFAULT_SPEED_RPM 1
 
 class RotaryStepper{
 public:
 	
-    RotaryStepper(int number_of_steps_per_rotation, int motor_pin_1, int motor_pin_2, int motor_pin_3, int motor_pin_4, int n_keyframes = DEFAULT_N_KEYFRAMES);
+    RotaryStepper(int number_of_steps_per_rotation, int motor_pin_1, int motor_pin_2, int motor_pin_3, int motor_pin_4);
 	
 	int getAbsoluteStep();
 	int getRelativeStep();
@@ -39,9 +40,11 @@ public:
 	float stepToDegrees(int step);
 	float stepToRotations(int step);
 	
-	void setKeyframe(int index, int value);
-	void setKeyframeHere(int index);
-
+	bool setKeyframeRelativeToHome(int index, int value);
+	bool setKeyframeHere(int index);
+	int getKeyframeAbsolute(int index);
+	int getKeyframeRelativeToHome(int index);
+	
 #ifdef _SIMULATOR
 	void report(string s);
 	void report(string varname, int i);
@@ -67,8 +70,8 @@ private:
 	bool home_is_set;
 	unsigned long step_delay;    // delay between steps, in ms, based on speed
 	
-	int * keyframes;
-	bool * keyframes_set;
+	int keyframes[MAX_N_KEYFRAMES];
+	bool keyframes_set[MAX_N_KEYFRAMES];
 
 };
 
