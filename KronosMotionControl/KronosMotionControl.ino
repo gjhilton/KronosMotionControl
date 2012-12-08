@@ -1,4 +1,5 @@
 #define _USE_SERIAL
+#define _NOTIFY_SERIAL
 #define MANUAL_DRIVE_NSTEPS 25
 #define STEPS_PER_ROTATION 200
 
@@ -26,6 +27,16 @@ OSCClient client;
 OSCServer server;
 
 /*	---------------------------------------------------- 
+	COMMUNICATION MACRO
+	---------------------------------------------------- */
+
+#ifdef _NOTIFY_SERIAL
+	#define NOTIFY(MSG) Serial.print(MSG);
+#else
+	#define NOTIFY(MSG) // noop
+#endif
+
+/*	---------------------------------------------------- 
 	ARDUINO LIFECYCLE
 	---------------------------------------------------- */
 
@@ -49,29 +60,25 @@ void loop(){
 	OSC
 	---------------------------------------------------- */
 
+void onOSCNotImplemented(OSCMessage *_mes = 0){
+	NOTIFY("OSC: unimplemented");
+}
+
 void oscBegin(){
 	Ethernet.begin(myMac ,myIp);
 	server.begin(serverPort);
-	server.addCallback(OSC_ADDR_FORWARD,&onOSCForward);
-	server.addCallback(OSC_ADDR_REWIND,&onOSCRewind);
-	server.addCallback(OSC_ADDR_SET_HOME,&onOSCSetHome);
-	server.addCallback(OSC_ADDR_HOME,&onOSCHome);
-}
-
-void onOSCForward(OSCMessage *_mes){
-	onForward();
-}
-
-void onOSCRewind(OSCMessage *_mes){
-	onRewind();
-}
-
-void onOSCSetHome(OSCMessage *_mes){
-	onSetAtHome();
-}
-
-void onOSCHome(OSCMessage *_mes){
-	onGoHome();
+	server.addCallback(OSCADDR_FORWARD_STEP, 	&onOSCNotImplemented);
+	server.addCallback(OSCADDR_REWIND_STEP, 	&onOSCNotImplemented);
+	server.addCallback(OSCADDR_GO, 				&onOSCNotImplemented);	
+	server.addCallback(OSCADDR_RESET, 			&onOSCNotImplemented);
+	server.addCallback(OSCADDR_DEPLOY, 			&onOSCNotImplemented);
+	server.addCallback(OSCADDR_UNDEPLOY, 		&onOSCNotImplemented);
+	server.addCallback(OSCADDR_STUNT, 			&onOSCNotImplemented);
+	server.addCallback(OSCADDR_GO_HOME, 		&onOSCNotImplemented);
+	server.addCallback(OSCADDR_SET_HERE_HOME, 	&onOSCNotImplemented);
+	server.addCallback(OSCADDR_GO_HOME_PLUS, 	&onOSCNotImplemented);
+	server.addCallback(OSCADDR_GO_KF, 			&onOSCNotImplemented);
+	server.addCallback(OSCADDR_SET_HERE_KF, 	&onOSCNotImplemented);
 }
 
 /*	---------------------------------------------------- 
@@ -95,7 +102,7 @@ void onBackwardOne(){
 void onForward(){
 #if defined _USE_SERIAL
 	Serial.print("Going forward by ");
-	printmanualincrement();
+	serialPrintManualIncrement();
 #endif
 	motor.driveByRelative(MANUAL_DRIVE_NSTEPS);
 }
@@ -103,7 +110,7 @@ void onForward(){
 void onRewind(){
 #if defined _USE_SERIAL
 	Serial.print("Going BACKWARD by ");
-	printmanualincrement();
+	serialPrintManualIncrement();
 #endif
 	motor.driveByRelative(-MANUAL_DRIVE_NSTEPS);
 }
@@ -140,7 +147,7 @@ void serialBegin(){
 		;
 	}
 	Serial.println("Send (h) for help");
-	establishContact();
+	serialEstablishContact();
 }
 
 void serialLoop(){
@@ -186,24 +193,24 @@ void serialLoop(){
 	}
 }
 
-void establishContact() {
+void serialEstablishContact() {
   while (Serial.available() <= 0) {
     Serial.println("ready");
     delay(1000);
   }
 }
 
-void printmanualincrement(){
+void serialPrintManualIncrement(){
 	Serial.println(MANUAL_DRIVE_NSTEPS);
 }
 
-void printspacer(){
+void serialPrintSpacer(){
 	Serial.println("");
 	Serial.println("+------------------------+");
 	Serial.println("");	
 }
 
-void printstep(int step){
+void serialPrintStep(int step){
 	float d = motor.stepToDegrees(step);
 	float r = motor.stepToRotations(step);
 	Serial.print(step);
@@ -216,7 +223,7 @@ void printstep(int step){
 }
 
 void onSerialHelp(){
-	printspacer();
+	serialPrintSpacer();
 	Serial.println(" COMMANDS AVAILABLE:");
 	Serial.println();
 	Serial.println(" h -> help");
@@ -224,25 +231,25 @@ void onSerialHelp(){
 	Serial.println(" z -> set current position as home");
 	Serial.println(" 0 -> go to home position");
 	Serial.print  (" +/= -> forward by ");
-	printmanualincrement();
+	serialPrintManualIncrement();
 	Serial.print  (" -/_ -> reverse by ");
-	printmanualincrement();
+	serialPrintManualIncrement();
 	Serial.println  (" ] -> forward by 1");
 	Serial.println  (" [ -> backward by 1");
-	printspacer();
+	serialPrintSpacer();
 }
 
 void onSerialStatus(){
-	printspacer();
+	serialPrintSpacer();
 	Serial.print("STATUS at ");
 	Serial.print(millis() / 1000);
 	Serial.println("s.");
 	Serial.println();
 	
 	Serial.print("Absolute: ");
-	printstep(motor.getAbsoluteStep());
+	serialPrintStep(motor.getAbsoluteStep());
 	Serial.print("Relative: ");
-	printstep(motor.getRelativeStep());
+	serialPrintStep(motor.getRelativeStep());
 	Serial.print("Home: ");
 	if (motor.homeSet()){
 		Serial.println(motor.getHomePos());
@@ -250,7 +257,7 @@ void onSerialStatus(){
 		Serial.println("not set");
 	}
 	
-	printspacer();
+	serialPrintSpacer();
 }
 
 #endif
