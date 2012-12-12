@@ -6,7 +6,7 @@
 #define STR_ERROR_UNRECOGNISED			"Unrecognised command: "
 #define STR_MENU						"AVAILABLE COMMANDS\n------------------\n"
 #define STR_MENU_SPACER					" -> "
-#define STR_READY						"Serial interface ready"
+#define STR_READY						"Serial: ready"
 
 SerialController::SerialController(int baud){
 	baudrate = baud;
@@ -39,7 +39,7 @@ void SerialController::loop(){
 			//}
 		}
 		Serial.print(STR_ERROR_UNRECOGNISED);
-		Serial.println(inByte);
+		Serial.println(char(inByte));
 	}
 }
 

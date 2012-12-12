@@ -7,6 +7,7 @@
 #include <Ethernet.h>
 #include <ArdOSC.h>
 
+#include "SerialController.h"
 #include "RotaryStepper.h"
 #include "configOSC.h"
 
@@ -16,16 +17,17 @@
 
 byte myMac[] = {0xDE,0xAD,0xBE,0xEE,0xAE,0xEB };
 byte myIp[]  = {192,168,1,123};
-int  serverPort  = 10000;
+int  oscListenPort  = 10000;
 
-byte 	oscDestinationIP[]  = {192, 168, 0, 2};
-int		oscDestinationPort = 12000;
+byte oscDestinationIP[]  = {192, 168, 0, 2};
+int oscDestinationPort = 12000;
 
 /*	---------------------------------------------------- 
 	GLOBALS
 	---------------------------------------------------- */
 
 RotaryStepper motor(STEPS_PER_ROTATION,6,7,8,9);
+SerialController serialport;
 OSCClient client;
 OSCServer server;
 
@@ -46,7 +48,7 @@ OSCServer server;
 void setup() {
 	oscBegin();
 #if defined _USE_SERIAL
-	serialBegin();
+	serialport.begin();
 #endif
 }
 
@@ -55,7 +57,7 @@ void loop(){
 		// this pointless call is the only thing that makes the skanky osc library work, so don't remove it
 	}
 #if defined _USE_SERIAL
-	serialLoop();
+	serialport.loop();
 #endif
 	OSCNotify();
 }
@@ -79,7 +81,7 @@ void onOSCNotImplemented(OSCMessage *_mes = 0){
 
 void oscBegin(){
 	Ethernet.begin(myMac ,myIp);
-	server.begin(serverPort);
+	server.begin(oscListenPort);
 	server.addCallback(OSCADDR_FORWARD_STEP, 	&onOSCNotImplemented);
 	server.addCallback(OSCADDR_REWIND_STEP, 	&onOSCNotImplemented);
 	server.addCallback(OSCADDR_GO, 				&onOSCNotImplemented);	
@@ -153,15 +155,6 @@ void onGoHome(){
 	---------------------------------------------------- */
 
 #if defined _USE_SERIAL
-
-void serialBegin(){
-	Serial.begin(9600);
-	while (!Serial) {
-		;
-	}
-	Serial.println("Send (h) for help");
-	serialEstablishContact();
-}
 
 void serialLoop(){
 	if (Serial.available() > 0) {
