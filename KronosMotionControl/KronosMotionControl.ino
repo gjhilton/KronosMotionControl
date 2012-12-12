@@ -18,6 +18,9 @@ byte myMac[] = {0xDE,0xAD,0xBE,0xEE,0xAE,0xEB };
 byte myIp[]  = {192,168,1,123};
 int  serverPort  = 10000;
 
+byte 	oscDestinationIP[]  = {192, 168, 0, 2};
+int		oscDestinationPort = 12000;
+
 /*	---------------------------------------------------- 
 	GLOBALS
 	---------------------------------------------------- */
@@ -54,11 +57,21 @@ void loop(){
 #if defined _USE_SERIAL
 	serialLoop();
 #endif
+	OSCNotify();
 }
 
 /*	---------------------------------------------------- 
 	OSC
 	---------------------------------------------------- */
+
+void OSCNotify(){
+	OSCMessage m;
+	m.setAddress(oscDestinationIP,oscDestinationPort);
+	m.beginMessage("/kronos/notify/absolute");
+	m.addArgInt32(motor.getAbsoluteStep());
+	client.send(&m);
+	m.flush();
+}
 
 void onOSCNotImplemented(OSCMessage *_mes = 0){
 	NOTIFY("OSC: unimplemented");

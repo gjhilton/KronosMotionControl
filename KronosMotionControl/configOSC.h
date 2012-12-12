@@ -21,3 +21,5 @@
 
 #define OSCADDR_GO_KF 				"/kronos/kf/go"			// pass an integer keyframe index
 #define OSCADDR_SET_HERE_KF 		"/kronos/kf/here"
+
+// HANDSHAKE / REPLY OVER OSC
