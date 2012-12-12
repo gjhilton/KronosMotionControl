@@ -4,9 +4,10 @@
 #define STR_ERROR_LINE_ENDING			"Please turn off sending line endings"
 #define STR_ERROR_TOO_MANY_CALLBACKS 	"Error"
 #define STR_ERROR_UNRECOGNISED			"Unrecognised command: "
-#define STR_MENU						"AVAILABLE COMMANDS\n------------------\n"
+#define STR_MENU						"\nAVAILABLE COMMANDS\n------------------\n"
 #define STR_MENU_SPACER					" -> "
-#define STR_READY						"..."
+#define STR_READY						"Send h for help"
+#define STR_WAIT						"..."
 
 SerialController::SerialController(int baud){
 	baudrate = baud;
@@ -18,8 +19,9 @@ void SerialController::begin(){
 	while (!Serial) {
 		;
 	}
+	Serial.println(STR_READY);
 	while (Serial.available() <= 0) {
-		Serial.println(STR_READY);
+		Serial.println(STR_WAIT);
 		delay(1000); // ie 1 second
 	}
 }
@@ -27,19 +29,35 @@ void SerialController::begin(){
 void SerialController::loop(){
 	if (Serial.available() > 0) {
 		int inByte = Serial.read();
+		
+		// complain if we're being sent line endings
 		if (inByte == 10 || inByte == 13){
-			// complain if we're being sent line endings
 			Serial.println(STR_ERROR_LINE_ENDING);
 			return;
 		}
+		
+		// show help table
+		if (inByte == 104 || inByte == 72){ // ie "h" or "H" )
+			showCommands();
+			return;
+		}
+		
+		// execute command
 		for (int i=0; i <=nCallbacks; i++){
 			if (inByte == int(callbackTriggerKeys[i])){
 				callbackFuncs[i]();
 				return;
 			}
 		}
+		
+		// fail
 		Serial.print(STR_ERROR_UNRECOGNISED);
-		Serial.println(char(inByte));
+		Serial.print(char(inByte));
+		Serial.print("[");
+		Serial.print(inByte);
+		Serial.println("]");
+	} else {
+		if (Serial.available() != 0) Serial.println("impossible");
 	}
 }
 
@@ -56,7 +74,7 @@ void SerialController::addCommand(char *key,  CallbackFunc _func, char *docstrin
 
 void SerialController::showCommands(){
 	Serial.println(STR_MENU);
-	for (int i=0; i <=nCallbacks; i++){
+	for (int i=0; i < nCallbacks; i++){
 		Serial.print(callbackTriggerKeys[i]);
 		Serial.print(STR_MENU_SPACER);
 		Serial.println(callbackDocstrings[i]);

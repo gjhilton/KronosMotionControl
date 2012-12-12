@@ -1,4 +1,3 @@
-#define _USE_SERIAL
 #define _NOTIFY_SERIAL
 #define MANUAL_DRIVE_NSTEPS 25
 #define STEPS_PER_ROTATION 200
@@ -47,34 +46,19 @@ OSCServer server;
 
 void setup() {
 	oscBegin();
-#if defined _USE_SERIAL
 	serialBegin();
-#endif
 }
 
 void loop(){
-	if(server.aviableCheck()>0){
-		// this pointless call is the only thing that makes the skanky osc library work, so don't remove it
-	}
-#if defined _USE_SERIAL
-	// serialport.loop();
-#endif
+	// this pointless call is all that makes the osc library work, so don't remove it
+	if(server.aviableCheck()>0){}
 	serialport.loop();
-	delay(100);
+	delay(50);
 }
 
 /*	---------------------------------------------------- 
 	OSC
 	---------------------------------------------------- */
-
-void OSCNotify(){
-	OSCMessage m;
-	m.setAddress(oscDestinationIP,oscDestinationPort);
-	m.beginMessage("/kronos/notify/absolute");
-	m.addArgInt32(motor.getAbsoluteStep());
-	client.send(&m);
-	m.flush();
-}
 
 void onOSCNotImplemented(OSCMessage *_mes = 0){
 	NOTIFY("OSC: unimplemented");
@@ -102,52 +86,52 @@ void oscBegin(){
 	---------------------------------------------------- */
 
 void onForwardOne(){
-#if defined _USE_SERIAL
+
 	Serial.print("Going forward by 1");
-#endif
+
 	motor.oneStepForward();
 }
 
 void onBackwardOne(){
-#if defined _USE_SERIAL
+
 	Serial.print("Going BACKWARD by 1");
-#endif
+
 	motor.oneStepBackward();
 }
 
 void onForward(){
-#if defined _USE_SERIAL
+
 	Serial.print("Going forward by ");
 	// serialPrintManualIncrement();
-#endif
+
 	motor.driveByRelative(MANUAL_DRIVE_NSTEPS);
 }
 
 void onRewind(){
-#if defined _USE_SERIAL
+
 	Serial.print("Going BACKWARD by ");
 	// serialPrintManualIncrement();
-#endif
+
 	motor.driveByRelative(-MANUAL_DRIVE_NSTEPS);
 }
 
 void onSetAtHome(){
 	motor.setAtHome();
-#if defined _USE_SERIAL
+
 	Serial.println("Set home to current step");
 	// onSerialStatus();
-#endif	
+
 }
 
 void onGoHome(){
-#if defined _USE_SERIAL
+
 	if (motor.homeSet()){
 		Serial.println("Going home");
 		// onSerialStatus();
 	} else {
 		Serial.println("Can't go home because it hasn't been set");
 	}
-#endif	
+
 	motor.driveHome();
 }
 
@@ -155,7 +139,7 @@ void onGoHome(){
 	SERIAL
 	---------------------------------------------------- */
 
-#if defined _USE_SERIAL
+
 
 void onSerialNotImplemented(){
 	Serial.println("Not implemented");
@@ -166,4 +150,4 @@ void serialBegin(){
 	serialport.addCommand("b", &onSerialNotImplemented, "test function");
 }
 
-#endif
+
