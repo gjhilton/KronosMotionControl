@@ -53,11 +53,9 @@ void SerialController::loop(){
 		// fail
 		Serial.print(STR_ERROR_UNRECOGNISED);
 		Serial.print(char(inByte));
-		Serial.print("[");
+		Serial.print(" [");
 		Serial.print(inByte);
 		Serial.println("]");
-	} else {
-		if (Serial.available() != 0) Serial.println("impossible");
 	}
 }
 
