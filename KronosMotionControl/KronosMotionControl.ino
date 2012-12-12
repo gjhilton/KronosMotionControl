@@ -35,7 +35,7 @@ OSCServer server;
 	---------------------------------------------------- */
 
 #ifdef _NOTIFY_SERIAL
-	#define NOTIFY(MSG) Serial.print(MSG);
+	#define NOTIFY(MSG) Serial.println(MSG);
 #else
 	#define NOTIFY(MSG) // noop
 #endif
@@ -86,63 +86,46 @@ void oscBegin(){
 	---------------------------------------------------- */
 
 void onForwardOne(){
-
-	Serial.print("Going forward by 1");
-
+	NOTIFY("Going forward by 1");
 	motor.oneStepForward();
 }
 
 void onBackwardOne(){
-
-	Serial.print("Going BACKWARD by 1");
-
+	NOTIFY("Going BACKWARD by 1");
 	motor.oneStepBackward();
 }
 
 void onForward(){
-
-	Serial.print("Going forward by ");
-	// serialPrintManualIncrement();
-
+	NOTIFY("Going forward");
 	motor.driveByRelative(MANUAL_DRIVE_NSTEPS);
 }
 
 void onRewind(){
-
-	Serial.print("Going BACKWARD by ");
-	// serialPrintManualIncrement();
-
+	NOTIFY("Going BACKWARD");
 	motor.driveByRelative(-MANUAL_DRIVE_NSTEPS);
 }
 
 void onSetAtHome(){
 	motor.setAtHome();
 
-	Serial.println("Set home to current step");
-	// onSerialStatus();
-
+	NOTIFY("Set home to current step");
 }
 
 void onGoHome(){
-
 	if (motor.homeSet()){
-		Serial.println("Going home");
-		// onSerialStatus();
+		NOTIFY("Going home");
+		motor.driveHome();
 	} else {
-		Serial.println("Can't go home because it hasn't been set");
+		NOTIFY("Can't go home because it hasn't been set");
 	}
-
-	motor.driveHome();
 }
 
 /*	---------------------------------------------------- 
 	SERIAL
 	---------------------------------------------------- */
 
-
-
 void onSerialNotImplemented(){
-	Serial.println("Not implemented");
+	NOTIFY("Not implemented");
 }
 
 void serialBegin(){
