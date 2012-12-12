@@ -6,7 +6,7 @@
 #define STR_ERROR_UNRECOGNISED			"Unrecognised command: "
 #define STR_MENU						"AVAILABLE COMMANDS\n------------------\n"
 #define STR_MENU_SPACER					" -> "
-#define STR_READY						"Serial: ready"
+#define STR_READY						"..."
 
 SerialController::SerialController(int baud){
 	baudrate = baud;
@@ -33,10 +33,10 @@ void SerialController::loop(){
 			return;
 		}
 		for (int i=0; i <=nCallbacks; i++){
-			//if (strcmp(inByte, callbackTriggerKeys[i]) == 1){
-			//	callbackFuncs[i]();
-			//	return;
-			//}
+			if (inByte == int(callbackTriggerKeys[i])){
+				callbackFuncs[i]();
+				return;
+			}
 		}
 		Serial.print(STR_ERROR_UNRECOGNISED);
 		Serial.println(char(inByte));
@@ -48,7 +48,9 @@ void SerialController::addCommand(char *key,  CallbackFunc _func, char *docstrin
 		Serial.println(STR_ERROR_TOO_MANY_CALLBACKS);
 		return;
 	}
-	// TODO - build array of commands
+	callbackTriggerKeys[nCallbacks] = *key;
+	callbackFuncs[nCallbacks] = _func;
+	callbackDocstrings[nCallbacks] = docstring;
 	nCallbacks ++;
 }
 

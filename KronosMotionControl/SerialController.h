@@ -25,7 +25,7 @@ private:
 	int baudrate;
 	int nCallbacks;
 	CallbackFunc callbackFuncs[MAX_SERIAL_CALLBACKS];
-	char *callbackTriggerKeys[MAX_SERIAL_CALLBACKS];
+	char callbackTriggerKeys[MAX_SERIAL_CALLBACKS];
 	char *callbackDocstrings[MAX_SERIAL_CALLBACKS];
 	
 };
