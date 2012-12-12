@@ -57,31 +57,6 @@ void loop(){
 }
 
 /*	---------------------------------------------------- 
-	OSC
-	---------------------------------------------------- */
-
-void onOSCNotImplemented(OSCMessage *_mes = 0){
-	NOTIFY("OSC: unimplemented");
-}
-
-void oscBegin(){
-	Ethernet.begin(myMac ,myIp);
-	server.begin(oscListenPort);
-	server.addCallback(OSCADDR_FORWARD_STEP, 	&onOSCNotImplemented);
-	server.addCallback(OSCADDR_REWIND_STEP, 	&onOSCNotImplemented);
-	server.addCallback(OSCADDR_GO, 				&onOSCNotImplemented);	
-	server.addCallback(OSCADDR_RESET, 			&onOSCNotImplemented);
-	server.addCallback(OSCADDR_DEPLOY, 			&onOSCNotImplemented);
-	server.addCallback(OSCADDR_UNDEPLOY, 		&onOSCNotImplemented);
-	server.addCallback(OSCADDR_STUNT, 			&onOSCNotImplemented);
-	server.addCallback(OSCADDR_GO_HOME, 		&onOSCNotImplemented);
-	server.addCallback(OSCADDR_SET_HERE_HOME, 	&onOSCNotImplemented);
-	server.addCallback(OSCADDR_GO_HOME_PLUS, 	&onOSCNotImplemented);
-	server.addCallback(OSCADDR_GO_KF, 			&onOSCNotImplemented);
-	server.addCallback(OSCADDR_SET_HERE_KF, 	&onOSCNotImplemented);
-}
-
-/*	---------------------------------------------------- 
 	COMMAND HANDLERS
 	---------------------------------------------------- */
 
@@ -107,7 +82,6 @@ void onRewind(){
 
 void onSetAtHome(){
 	motor.setAtHome();
-
 	NOTIFY("Set home to current step");
 }
 
@@ -121,7 +95,7 @@ void onGoHome(){
 }
 
 /*	---------------------------------------------------- 
-	SERIAL
+	SERIAL CONTROL
 	---------------------------------------------------- */
 
 void onSerialNotImplemented(){
@@ -131,6 +105,31 @@ void onSerialNotImplemented(){
 void serialBegin(){
 	serialport.begin();
 	serialport.addCommand("b", &onSerialNotImplemented, "test function");
+}
+
+/*	---------------------------------------------------- 
+	OSC CONTROL
+	---------------------------------------------------- */
+
+void onOSCNotImplemented(OSCMessage *_mes = 0){
+	NOTIFY("OSC: unimplemented");
+}
+
+void oscBegin(){
+	Ethernet.begin(myMac ,myIp);
+	server.begin(oscListenPort);
+	server.addCallback(OSCADDR_FORWARD_STEP, 	&onOSCNotImplemented);
+	server.addCallback(OSCADDR_REWIND_STEP, 	&onOSCNotImplemented);
+	server.addCallback(OSCADDR_GO, 				&onOSCNotImplemented);	
+	server.addCallback(OSCADDR_RESET, 			&onOSCNotImplemented);
+	server.addCallback(OSCADDR_DEPLOY, 			&onOSCNotImplemented);
+	server.addCallback(OSCADDR_UNDEPLOY, 		&onOSCNotImplemented);
+	server.addCallback(OSCADDR_STUNT, 			&onOSCNotImplemented);
+	server.addCallback(OSCADDR_GO_HOME, 		&onOSCNotImplemented);
+	server.addCallback(OSCADDR_SET_HERE_HOME, 	&onOSCNotImplemented);
+	server.addCallback(OSCADDR_GO_HOME_PLUS, 	&onOSCNotImplemented);
+	server.addCallback(OSCADDR_GO_KF, 			&onOSCNotImplemented);
+	server.addCallback(OSCADDR_SET_HERE_KF, 	&onOSCNotImplemented);
 }
 
 
