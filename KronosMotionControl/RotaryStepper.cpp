@@ -79,15 +79,17 @@ bool RotaryStepper::setKeyframeHere(int index){
 }
 
 int RotaryStepper::getKeyframeAbsolute(int index){
-	return getKeyframeRelativeToHome(index) + home_offset_steps;
+	if (home_is_set) {
+		return getKeyframeRelativeToHome(index) + home_offset_steps;
+	}
+	return 0; // hard to know a good value for an invalid keyframe
 }
 
 int RotaryStepper::getKeyframeRelativeToHome(int index){
 	if ((index < MAX_N_KEYFRAMES) && (keyframes_set[index])){
 		return keyframes[index];
-	} else {
-		return 0; // hard to know a good value for an invalid keyframe
 	}
+	return 0; // hard to know a good value for an invalid keyframe
 }
 
 /*	---------------------------------------------------- 
@@ -105,7 +107,9 @@ void RotaryStepper::driveHome() {
 }
 
 void RotaryStepper::driveToKeyframe(int index){
-	driveToAbsoluteTarget(getKeyframeAbsolute(index));
+	if ((home_is_set) && (index < MAX_N_KEYFRAMES) && (keyframes_set[index])){
+		driveToAbsoluteTarget(getKeyframeAbsolute(index));
+	}
 }
 
 void RotaryStepper::driveToAbsoluteTarget(int abs_target){

@@ -12,7 +12,7 @@
 
 #include "interpolation.h"
 
-#define MAX_N_KEYFRAMES 3
+#define MAX_N_KEYFRAMES 5
 #define DEFAULT_SPEED_RPM 1
 
 class RotaryStepper{

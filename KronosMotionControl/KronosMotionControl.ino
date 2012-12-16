@@ -61,27 +61,89 @@ void loop(){
 	---------------------------------------------------- */
 
 void commandGo(int steps){
-	NOTIFY("Go -> ");
+	NOTIFY("go -> ");
 	NOTIFY(steps);
-	NOTIFY("\n");
+	NOTIFY(" steps\n");
 	// motor.driveByRelative(steps);
 }
 
+void commandGoHome(){
+	NOTIFY("go -> home");
+	// motor.driveHome();
+}
+
+void commandGoKey(int key){
+	NOTIFY("go -> to position ");
+	NOTIFY(key);
+	NOTIFY("\n");
+	// motor.driveToKeyframe(key);
+}
+
+void commandSetHomeHere(){
+	motor.setAtHome();
+	NOTIFY("set -> home at ");
+	NOTIFY(motor.getHomePos());
+	NOTIFY("\n");
+}
+
 /*	---------------------------------------------------- 
-	SERIAL CONTROL
+	SERIAL CONTROL FACADE
 	---------------------------------------------------- */
 
-void onSerialNotImplemented(){
-	NOTIFY("Not implemented");
+void onSerialGoKey1()		{commandGoKey(1);}
+void onSerialGoKey2()		{commandGoKey(2);}
+void onSerialGoKey3()		{commandGoKey(3);}
+void onSerialGoKey4()		{commandGoKey(4);}
+void onSerialGoKey5()		{commandGoKey(5);}
+void onSerialGoKey6()		{commandGoKey(6);}
+
+void onSerialGoUp1()		{commandGo(-1);}
+void onSerialGoUp10()		{commandGo(-10);}
+void onSerialGoUp100()		{commandGo(-100);}
+void onSerialGoUp200()		{commandGo(-200);}
+void onSerialGoUp500()		{commandGo(-500);}
+
+void onSerialGoDown1()		{commandGo(1);}
+void onSerialGoDown10()		{commandGo(10);}
+void onSerialGoDown100()	{commandGo(100);}
+void onSerialGoDown200()	{commandGo(200);}
+void onSerialGoDown500()	{commandGo(500);}
+
+void onSerialStatus()		{
+	NOTIFY("/n");
+	// TODO
 }
 
 void serialBegin(){
 	serialport.begin();
-	serialport.addCommand("b", &onSerialNotImplemented, "test function");
+
+	serialport.addCommand("1", &onSerialGoKey1, 	"go to position 1");
+	serialport.addCommand("2", &onSerialGoKey2, 	"go to position 2");
+	serialport.addCommand("3", &onSerialGoKey3, 	"go to position 3");
+	serialport.addCommand("4", &onSerialGoKey4, 	"go to position 4");
+	serialport.addCommand("5", &onSerialGoKey5, 	"go to position 5");
+	serialport.addCommand("6", &onSerialGoKey6, 	"go to position 6");
+	
+	serialport.addCommand("q", &onSerialGoDown1, 	"up 1");
+	serialport.addCommand("w", &onSerialGoDown10, 	"up 10");
+	serialport.addCommand("e", &onSerialGoDown100, 	"up 100");
+	serialport.addCommand("r", &onSerialGoDown200, 	"up 200");
+	serialport.addCommand("t", &onSerialGoDown500, 	"up 500");
+	
+	serialport.addCommand("a", &onSerialGoDown1, 	"down 1");
+	serialport.addCommand("s", &onSerialGoDown10, 	"down 10");
+	serialport.addCommand("d", &onSerialGoDown100, 	"down 100");
+	serialport.addCommand("f", &onSerialGoDown200, 	"down 200");
+	serialport.addCommand("g", &onSerialGoDown500, 	"down 500");
+	
+	serialport.addCommand("0", &commandGoHome, 		"go home");
+	serialport.addCommand("=", &commandSetHomeHere, "set home here");
+	
+	serialport.addCommand(" ", &onSerialStatus, 	"get status");
 }
 
 /*	---------------------------------------------------- 
-	OSC CONTROL
+	OSC CONTROL FACADE
 	---------------------------------------------------- */
 
 void onOSCNotImplemented(OSCMessage *_mes){
@@ -92,19 +154,31 @@ void onOSCgo(OSCMessage *_mes){
 	commandGo(_mes->getArgInt32(0));
 }
 
+void onOSCkey(OSCMessage *_mes){
+	commandGoKey(_mes->getArgInt32(0));
+}
+
+void onOSChome(OSCMessage *_mes){
+	commandGoHome();
+}
+
+void onOSCsetHome(OSCMessage *_mes){
+	commandSetHomeHere();
+}
+
 void oscBegin(){
 	Ethernet.begin(myMac ,myIp);
 	server.begin(oscListenPort);
 	server.addCallback(OSC_ADDR_GO, &onOSCgo);
 	server.addCallback(OSC_ADDR_GO_KEY, 	&onOSCNotImplemented);
-	server.addCallback(OSC_ADDR_GO_HOME, 	&onOSCNotImplemented);
+	server.addCallback(OSC_ADDR_GO_HOME, 	&onOSCkey);
 	server.addCallback(OSC_ADDR_SET_KEY1, 	&onOSCNotImplemented);
 	server.addCallback(OSC_ADDR_SET_KEY2, 	&onOSCNotImplemented);
 	server.addCallback(OSC_ADDR_SET_KEY3, 	&onOSCNotImplemented);
 	server.addCallback(OSC_ADDR_SET_KEY4, 	&onOSCNotImplemented);
 	server.addCallback(OSC_ADDR_SET_KEY5, 	&onOSCNotImplemented);
 	server.addCallback(OSC_ADDR_SET_KEY6, 	&onOSCNotImplemented);
-	server.addCallback(OSC_ADDR_SET_HOME, 	&onOSCNotImplemented);
+	server.addCallback(OSC_ADDR_SET_HOME, 	&onOSCsetHome);
 }
 
 
