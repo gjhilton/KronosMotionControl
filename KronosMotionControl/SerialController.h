@@ -4,7 +4,7 @@
 #include "Arduino.h"
 
 #define DEFAULT_BAUD_RATE 9600
-#define MAX_SERIAL_CALLBACKS 20
+#define MAX_SERIAL_CALLBACKS 30
 
 typedef void (*CallbackFunc)();
 

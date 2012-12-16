@@ -86,6 +86,28 @@ void commandSetHomeHere(){
 	NOTIFY("\n");
 }
 
+void commandSetKeyHere(int index){
+	motor.setKeyframeHere(index);
+	NOTIFY("set -> key ");
+	NOTIFY(index);
+	NOTIFY(" at ");
+	NOTIFY(motor.getKeyframeRelativeToHome(index));
+	NOTIFY("\n");
+}
+
+void commandSetKeyValue(int index, int val){
+	NOTIFY("set -> key ");
+		NOTIFY(index);
+		NOTIFY(" at ");
+		NOTIFY(val);
+	if (motor.setKeyframeRelativeToHome(index,val)){
+		NOTIFY(" success");
+	} else {
+		NOTIFY(" ERROR");
+	}
+	NOTIFY("\n");
+}
+
 /*	---------------------------------------------------- 
 	SERIAL CONTROL FACADE
 	---------------------------------------------------- */
@@ -96,6 +118,13 @@ void onSerialGoKey3()		{commandGoKey(3);}
 void onSerialGoKey4()		{commandGoKey(4);}
 void onSerialGoKey5()		{commandGoKey(5);}
 void onSerialGoKey6()		{commandGoKey(6);}
+
+void onSerialSetKey1()		{commandSetKeyHere(1);}
+void onSerialSetKey2()		{commandSetKeyHere(2);}
+void onSerialSetKey3()		{commandSetKeyHere(3);}
+void onSerialSetKey4()		{commandSetKeyHere(4);}
+void onSerialSetKey5()		{commandSetKeyHere(5);}
+void onSerialSetKey6()		{commandSetKeyHere(6);}
 
 void onSerialGoUp1()		{commandGo(-1);}
 void onSerialGoUp10()		{commandGo(-10);}
@@ -123,6 +152,13 @@ void serialBegin(){
 	serialport.addCommand("4", &onSerialGoKey4, 	"go to position 4");
 	serialport.addCommand("5", &onSerialGoKey5, 	"go to position 5");
 	serialport.addCommand("6", &onSerialGoKey6, 	"go to position 6");
+	
+	serialport.addCommand("!", &onSerialSetKey1, 	"set position 1 here");
+	serialport.addCommand("@", &onSerialSetKey2, 	"set position 2 here");
+	serialport.addCommand("£", &onSerialSetKey3, 	"set position 3 here");
+	serialport.addCommand("$", &onSerialSetKey4, 	"set position 4 here");
+	serialport.addCommand("%", &onSerialSetKey5, 	"set position 5 here");
+	serialport.addCommand("^", &onSerialSetKey6, 	"set position 6 here");
 	
 	serialport.addCommand("q", &onSerialGoDown1, 	"up 1");
 	serialport.addCommand("w", &onSerialGoDown10, 	"up 10");
@@ -166,18 +202,25 @@ void onOSCsetHome(OSCMessage *_mes){
 	commandSetHomeHere();
 }
 
+void onOSCset1(OSCMessage *_mes){commandSetKeyValue(1,_mes->getArgInt32(0));}
+void onOSCset2(OSCMessage *_mes){commandSetKeyValue(2,_mes->getArgInt32(0));}
+void onOSCset3(OSCMessage *_mes){commandSetKeyValue(3,_mes->getArgInt32(0));}
+void onOSCset4(OSCMessage *_mes){commandSetKeyValue(4,_mes->getArgInt32(0));}
+void onOSCset5(OSCMessage *_mes){commandSetKeyValue(5,_mes->getArgInt32(0));}
+void onOSCset6(OSCMessage *_mes){commandSetKeyValue(6,_mes->getArgInt32(0));}
+
 void oscBegin(){
 	Ethernet.begin(myMac ,myIp);
 	server.begin(oscListenPort);
 	server.addCallback(OSC_ADDR_GO, &onOSCgo);
 	server.addCallback(OSC_ADDR_GO_KEY, 	&onOSCNotImplemented);
 	server.addCallback(OSC_ADDR_GO_HOME, 	&onOSCkey);
-	server.addCallback(OSC_ADDR_SET_KEY1, 	&onOSCNotImplemented);
-	server.addCallback(OSC_ADDR_SET_KEY2, 	&onOSCNotImplemented);
-	server.addCallback(OSC_ADDR_SET_KEY3, 	&onOSCNotImplemented);
-	server.addCallback(OSC_ADDR_SET_KEY4, 	&onOSCNotImplemented);
-	server.addCallback(OSC_ADDR_SET_KEY5, 	&onOSCNotImplemented);
-	server.addCallback(OSC_ADDR_SET_KEY6, 	&onOSCNotImplemented);
+	server.addCallback(OSC_ADDR_SET_KEY1, 	&onOSCset1);
+	server.addCallback(OSC_ADDR_SET_KEY2, 	&onOSCset2);
+	server.addCallback(OSC_ADDR_SET_KEY3, 	&onOSCset3);
+	server.addCallback(OSC_ADDR_SET_KEY4, 	&onOSCset4);
+	server.addCallback(OSC_ADDR_SET_KEY5, 	&onOSCset5);
+	server.addCallback(OSC_ADDR_SET_KEY6, 	&onOSCset6);
 	server.addCallback(OSC_ADDR_SET_HOME, 	&onOSCsetHome);
 }
 
