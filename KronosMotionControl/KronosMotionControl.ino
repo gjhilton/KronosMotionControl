@@ -35,7 +35,7 @@ OSCServer server;
 	---------------------------------------------------- */
 
 #ifdef _NOTIFY_SERIAL
-	#define NOTIFY(MSG) Serial.print(MSG);
+	#define NOTIFY(MSG) Serial.println(MSG);
 #else
 	#define NOTIFY(MSG) // noop
 #endif
@@ -61,51 +61,56 @@ void loop(){
 	---------------------------------------------------- */
 
 void commandGo(int steps){
-	NOTIFY("go -> ");
-	NOTIFY(steps);
-	NOTIFY(" steps\n");
-	// motor.driveByRelative(steps);
+	String s = String("go -> ");
+	s += steps;
+	s += " steps";
+	NOTIFY(s);
+	motor.driveByRelative(steps);
 }
 
 void commandGoHome(){
 	NOTIFY("go -> home");
-	// motor.driveHome();
+	motor.driveHome();
 }
 
 void commandGoKey(int key){
-	NOTIFY("go -> to position ");
-	NOTIFY(key);
-	NOTIFY("\n");
-	// motor.driveToKeyframe(key);
+	String s = String("go -> to position ");
+	s += key;
+	NOTIFY(s);
+	motor.driveToKeyframe(key);
 }
 
 void commandSetHomeHere(){
 	motor.setAtHome();
-	NOTIFY("set -> home at ");
-	NOTIFY(motor.getHomePos());
-	NOTIFY("\n");
+	String s = String("set -> home at ");
+	s += motor.getHomePos();
+	NOTIFY(s);
 }
 
 void commandSetKeyHere(int index){
-	motor.setKeyframeHere(index);
-	NOTIFY("set -> key ");
-	NOTIFY(index);
-	NOTIFY(" at ");
-	NOTIFY(motor.getKeyframeRelativeToHome(index));
-	NOTIFY("\n");
+	if (motor.homeSet()){
+		motor.setKeyframeHere(index);
+		String s = String("set -> key ");
+		s += index;
+		s += " at home +";
+		s += motor.getKeyframeRelativeToHome(index);
+		NOTIFY(s);
+	} else {
+		NOTIFY("couldnt set keyframe");
+	}
 }
 
 void commandSetKeyValue(int index, int val){
-	NOTIFY("set -> key ");
-		NOTIFY(index);
-		NOTIFY(" at ");
-		NOTIFY(val);
+	String s = String("set -> key ");
+	s += index;
+	s += " at ";
+	s += (val);
 	if (motor.setKeyframeRelativeToHome(index,val)){
-		NOTIFY(" success");
+		s+= " success";
 	} else {
-		NOTIFY(" ERROR");
+		s += " ERROR";
 	}
-	NOTIFY("\n");
+	NOTIFY(s);
 }
 
 /*	---------------------------------------------------- 
@@ -138,14 +143,34 @@ void onSerialGoDown100()	{commandGo(100);}
 void onSerialGoDown200()	{commandGo(200);}
 void onSerialGoDown500()	{commandGo(500);}
 
-void onSerialStatus()		{
-	NOTIFY("/n");
-	// TODO
+void onSerialGetPos()		{
+	String s = String("position -> ");
+	s += motor.getAbsoluteStep();
+	s += " home";
+	if (motor.homeSet()){
+		s += "@";
+		s += motor.getHomePos();
+		s += "+";
+		s += motor.getRelativeStep();
+	} else {
+		s += " NOT SET";
+	}
+	NOTIFY(s);
+}
+
+void onSerialGetKeys()		{
+	String s = String("keys -> ");
+	for (int k=1; k<7; k++){
+		s += motor.getKeyframeRelativeToHome(k);
+		s += " ";
+	}
+	NOTIFY(s);
 }
 
 void serialBegin(){
 	serialport.begin();
 
+	serialport.addCommand("0", &commandGoHome, 		"go home");
 	serialport.addCommand("1", &onSerialGoKey1, 	"go to position 1");
 	serialport.addCommand("2", &onSerialGoKey2, 	"go to position 2");
 	serialport.addCommand("3", &onSerialGoKey3, 	"go to position 3");
@@ -153,6 +178,7 @@ void serialBegin(){
 	serialport.addCommand("5", &onSerialGoKey5, 	"go to position 5");
 	serialport.addCommand("6", &onSerialGoKey6, 	"go to position 6");
 	
+	serialport.addCommand("=", &commandSetHomeHere, "set home here");
 	serialport.addCommand("!", &onSerialSetKey1, 	"set position 1 here");
 	serialport.addCommand("@", &onSerialSetKey2, 	"set position 2 here");
 	serialport.addCommand("£", &onSerialSetKey3, 	"set position 3 here");
@@ -160,11 +186,11 @@ void serialBegin(){
 	serialport.addCommand("%", &onSerialSetKey5, 	"set position 5 here");
 	serialport.addCommand("^", &onSerialSetKey6, 	"set position 6 here");
 	
-	serialport.addCommand("q", &onSerialGoDown1, 	"up 1");
-	serialport.addCommand("w", &onSerialGoDown10, 	"up 10");
-	serialport.addCommand("e", &onSerialGoDown100, 	"up 100");
-	serialport.addCommand("r", &onSerialGoDown200, 	"up 200");
-	serialport.addCommand("t", &onSerialGoDown500, 	"up 500");
+	serialport.addCommand("q", &onSerialGoUp1, 	"up 1");
+	serialport.addCommand("w", &onSerialGoUp10, 	"up 10");
+	serialport.addCommand("e", &onSerialGoUp100, 	"up 100");
+	serialport.addCommand("r", &onSerialGoUp200, 	"up 200");
+	serialport.addCommand("t", &onSerialGoUp500, 	"up 500");
 	
 	serialport.addCommand("a", &onSerialGoDown1, 	"down 1");
 	serialport.addCommand("s", &onSerialGoDown10, 	"down 10");
@@ -172,10 +198,8 @@ void serialBegin(){
 	serialport.addCommand("f", &onSerialGoDown200, 	"down 200");
 	serialport.addCommand("g", &onSerialGoDown500, 	"down 500");
 	
-	serialport.addCommand("0", &commandGoHome, 		"go home");
-	serialport.addCommand("=", &commandSetHomeHere, "set home here");
-	
-	serialport.addCommand(" ", &onSerialStatus, 	"get status");
+	serialport.addCommand(" ", &onSerialGetPos, 	"get position");
+	serialport.addCommand("-", &onSerialGetKeys, 	"get keyframes");
 }
 
 /*	---------------------------------------------------- 
@@ -213,8 +237,8 @@ void oscBegin(){
 	Ethernet.begin(myMac ,myIp);
 	server.begin(oscListenPort);
 	server.addCallback(OSC_ADDR_GO, &onOSCgo);
-	server.addCallback(OSC_ADDR_GO_KEY, 	&onOSCNotImplemented);
-	server.addCallback(OSC_ADDR_GO_HOME, 	&onOSCkey);
+	server.addCallback(OSC_ADDR_GO_KEY, 	&onOSCkey);
+	server.addCallback(OSC_ADDR_GO_HOME, 	&onOSChome);
 	server.addCallback(OSC_ADDR_SET_KEY1, 	&onOSCset1);
 	server.addCallback(OSC_ADDR_SET_KEY2, 	&onOSCset2);
 	server.addCallback(OSC_ADDR_SET_KEY3, 	&onOSCset3);
