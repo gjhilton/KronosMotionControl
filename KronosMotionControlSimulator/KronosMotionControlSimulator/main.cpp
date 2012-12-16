@@ -170,10 +170,11 @@ void testKeyframes(){
 }
 
 int main(int argc, const char * argv[]) {
-	//testDrive();
-	//testHome();
-    //testInterpolation();
 	// testKeyframes();
+	testDrive(); // this will fail if testKFs is called first
+	testHome();
+    // testInterpolation();
+	
 	
 	return 0;
 }
