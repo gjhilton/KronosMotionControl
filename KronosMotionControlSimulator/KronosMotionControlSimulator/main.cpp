@@ -169,12 +169,36 @@ void testKeyframes(){
 	cout << "\n";
 }
 
+void testInterpolatedGo(){
+	cout << "Testing interpolated go...\n";
+	motor.driveToAbsoluteTargetEased(200);
+	cout << "-> 200 = " << motor.getAbsoluteStep() << "\n";
+	motor.driveToAbsoluteTargetEased(-137,337);
+	cout << "-> -137 = " << motor.getAbsoluteStep() << "\n";
+	motor.driveToAbsoluteTargetEased(-137,0);
+	cout << "-> -137 = " << motor.getAbsoluteStep() << "\n";
+	motor.driveToAbsoluteTargetEased(-138,1);
+	cout << "-> -138 = " << motor.getAbsoluteStep() << "\n";
+	motor.driveToAbsoluteTargetEased(0,0);
+	cout << "-> 0 = " << motor.getAbsoluteStep() << "\n";
+	cout << "------------------------- \n";
+	cout << "(7 second wait) \n";
+	motor.driveToAbsoluteTargetEased(1000,2000,SINE_IN);
+	cout << "-> 1000 = " << motor.getAbsoluteStep() << "\n";
+	motor.driveToAbsoluteTargetEased(100,1,SINE_IN);
+	cout << "-> 100 = " << motor.getAbsoluteStep() << "\n";
+	motor.driveToAbsoluteTargetEased(100,10000000000,SINE_IN);
+	motor.driveToAbsoluteTargetEased(101,1,SINE_IN);
+	cout << "-> 101 = " << motor.getAbsoluteStep() << "\n";
+	cout << "...complete\n";
+}
+
 int main(int argc, const char * argv[]) {
 	// testKeyframes();
-	testDrive(); // this will fail if testKFs is called first
-	testHome();
+	//testDrive(); // this will fail if testKFs is called first
+	//testHome();
     // testInterpolation();
-	
+	testInterpolatedGo();
 	
 	return 0;
 }

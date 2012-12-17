@@ -133,6 +133,28 @@ void RotaryStepper::driveToAbsoluteTarget(int abs_target){
 	}
 }
 
+void RotaryStepper::driveToAbsoluteTargetEased(int abs_target, int total_additional_ms, Interpolation kind){
+	long nextStepTime = 0;
+	float nsteps = float(abs(abs_step - abs_target));
+	float step = 1;
+	float additional_ms = float(total_additional_ms);
+	int lastextra=0;
+	while(abs_step != abs_target) {
+		if (millis() >= nextStepTime) {
+			abs_step < abs_target ? oneStepForward() : oneStepBackward();
+			int t = 0;
+			if (total_additional_ms > 0){
+				int extratime = interpolate(step, 0.0, additional_ms, nsteps, kind);
+				t = extratime - lastextra;
+				lastextra = extratime;
+			}
+			nextStepTime = last_step_time + step_delay + t;
+			// cout << nextStepTime << "(" << t << ")\n";
+			step++;
+		}
+	}
+}
+
 /*	---------------------------------------------------- 
 	HARDWARE INTERFACE
 	---------------------------------------------------- */

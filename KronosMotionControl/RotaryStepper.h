@@ -35,6 +35,7 @@ public:
 	void driveHome();
 	void driveByRelative(int nsteps);
 	void driveToAbsoluteTarget(int abs_target);
+	void driveToAbsoluteTargetEased(int abs_target, int total_additional_ms=0, Interpolation kind = LINEAR);
 	void driveToKeyframe(int index);
 	
 	float stepToDegrees(int step);
