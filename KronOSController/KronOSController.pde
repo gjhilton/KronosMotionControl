@@ -44,10 +44,14 @@ void draw() {
 	background(COLOUR_BG); 
 	drawTextboxes();
 }
+
 void oscEvent(OscMessage m) {
 	String s = m.addrPattern();
 	if (m.typetag().equals("i")){
 		s += "->" + str(m.get(0).intValue());
+	}
+	if (m.typetag().equals("s")){
+		s += "->" + m.get(0).stringValue();
 	}
 	addReceivedMessage(s);
 }
@@ -185,27 +189,27 @@ void setupAutoDrive(){
 	addbutton("shome", 		"set home here", 0, col_kfs_x, y);
 	
 	addbutton("gkf1", 		"go to kf 1", 3, col_kfg_x, y+=50);
-	addKFControl("k1","keyframe 1",col_kfv_x,y);
+	addKFControl("k1",		"keyframe 1",col_kfv_x,y);
 	addbutton("skf1", 		"set kf 1", 0, col_kfs_x, y);
 	
 	addbutton("gkf2", 		"go to kf 2", 3, col_kfg_x, y+=50);
-	addKFControl("k2","keyframe 2",col_kfv_x,y);
+	addKFControl("k2",		"keyframe 2",col_kfv_x,y);
 	addbutton("skf2", 		"set kf 2", 0, col_kfs_x, y);
 	
 	addbutton("gkf3", 		"go to kf 3", 3, col_kfg_x, y+=50);
-	addKFControl("k3","keyframe 3",col_kfv_x,y);
+	addKFControl("k3",		"keyframe 3",col_kfv_x,y);
 	addbutton("skf3", 		"set kf 3", 0, col_kfs_x, y);
 		
 	addbutton("gkf4", 		"go to kf 4", 3, col_kfg_x, y+=50);
-	addKFControl("k4","keyframe 4",col_kfv_x,y);
+	addKFControl("k4",		"keyframe 4",col_kfv_x,y);
 	addbutton("skf4", 		"set kf 4", 0, col_kfs_x, y);
 	
 	addbutton("gkf5", 		"go to kf 5", 3, col_kfg_x, y+=50);
-	addKFControl("k5","keyframe 5",col_kfv_x,y);
+	addKFControl("k5",		"keyframe 5",col_kfv_x,y);
 	addbutton("skf5", 		"set kf 5", 0, col_kfs_x, y);
 	
 	addbutton("gkf6", 		"go to kf 6", 3, col_kfg_x, y+=50);
-	addKFControl("k6","keyframe 6",col_kfv_x,y);
+	addKFControl("k6",		"keyframe 6",col_kfv_x,y);
 	addbutton("skf6", 		"set kf 6", 0, col_kfs_x, y);
 	
 	cp5.loadProperties(("keyframe.properties"));
