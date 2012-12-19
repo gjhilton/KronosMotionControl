@@ -18,7 +18,7 @@ byte myMac[] = {0xDE,0xAD,0xBE,0xEE,0xAE,0xEB };
 byte myIp[]  = {192,168,1,123};
 int  oscListenPort  = 10000;
 
-byte oscDestinationIP[]  = {192,168,1,124};
+byte oscDestinationIP[]  = {192,168,1,4};
 int oscDestinationPort = 12000;
 
 /*	---------------------------------------------------- 
@@ -113,6 +113,21 @@ void commandSetKeyValue(int index, int val){
 	NOTIFY(s);
 }
 
+String commandGetPos(){
+	String s = String("kronos position -> ");
+	s += motor.getAbsoluteStep();
+	s += " home";
+	if (motor.homeSet()){
+		s += "@";
+		s += motor.getHomePos();
+		s += "+";
+		s += motor.getRelativeStep();
+	} else {
+		s += " NOT SET";
+	}
+	return s;
+}
+
 /*	---------------------------------------------------- 
 	SERIAL CONTROL FACADE
 	---------------------------------------------------- */
@@ -144,17 +159,7 @@ void onSerialGoDown200()	{commandGo(200);}
 void onSerialGoDown500()	{commandGo(500);}
 
 void onSerialGetPos()		{
-	String s = String("position -> ");
-	s += motor.getAbsoluteStep();
-	s += " home";
-	if (motor.homeSet()){
-		s += "@";
-		s += motor.getHomePos();
-		s += "+";
-		s += motor.getRelativeStep();
-	} else {
-		s += " NOT SET";
-	}
+	String s = commandGetPos();
 	NOTIFY(s);
 }
 
@@ -211,19 +216,23 @@ void onOSCNotImplemented(OSCMessage *_mes){
 }
 
 void onOSCgo(OSCMessage *_mes){
+	oscPrint("Received go");
 	commandGo(_mes->getArgInt32(0));
 }
 
 void onOSCkey(OSCMessage *_mes){
+	oscPrint("Received go to keyframe");
 	commandGoKey(_mes->getArgInt32(0));
 }
 
 void onOSChome(OSCMessage *_mes){
+	oscPrint("Received go to home");
 	commandGoHome();
 }
 
 void onOSCsetHome(OSCMessage *_mes){
 	commandSetHomeHere();
+	oscPrint("Set home");
 }
 
 void onOSCset1(OSCMessage *_mes){commandSetKeyValue(1,_mes->getArgInt32(0));}
@@ -232,6 +241,10 @@ void onOSCset3(OSCMessage *_mes){commandSetKeyValue(3,_mes->getArgInt32(0));}
 void onOSCset4(OSCMessage *_mes){commandSetKeyValue(4,_mes->getArgInt32(0));}
 void onOSCset5(OSCMessage *_mes){commandSetKeyValue(5,_mes->getArgInt32(0));}
 void onOSCset6(OSCMessage *_mes){commandSetKeyValue(6,_mes->getArgInt32(0));}
+void onOSCGetPos()		{
+	String s = commandGetPos();
+	oscPrint(s);
+}
 
 void oscBegin(){
 	Ethernet.begin(myMac ,myIp);
@@ -252,7 +265,8 @@ void oscPrint(String s){
 	OSCMessage m;
 	m.setAddress(oscDestinationIP,oscDestinationPort);
 	m.beginMessage(OSC_ADDR_REPLY);
-	char str[]="simple send2 !!";
-	m.addArgString(str);
+	char c[s.length()]; 
+	s.toCharArray(c, s.length());
+	m.addArgString(c);
 	client.send(&m);
 }
