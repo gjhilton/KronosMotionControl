@@ -1,4 +1,4 @@
-#define _NOTIFY_SERIAL
+// #define _NOTIFY_SERIAL
 #define MANUAL_DRIVE_NSTEPS 25
 #define STEPS_PER_ROTATION 200
 
@@ -26,7 +26,7 @@ int oscDestinationPort = 12000;
 	---------------------------------------------------- */
 
 RotaryStepper motor(STEPS_PER_ROTATION,6,7,8,9);
-SerialController serialport;
+// SerialController serialport;
 OSCClient client;
 OSCServer server;
 
@@ -46,13 +46,13 @@ OSCServer server;
 
 void setup() {
 	oscBegin();
-	serialBegin();
+	// serialBegin();
 }
 
 void loop(){
 	// this pointless call is all that makes the osc library work, so don't remove it
 	if(server.aviableCheck()>0){}
-	serialport.loop();
+	// serialport.loop();
 	delay(50);
 	//oscPrint();
 	//delay(1000);
@@ -224,7 +224,7 @@ void onOSCgo(OSCMessage *_mes){
 	int target = _mes->getArgInt32(0);
 	String s = "Going by ";
 	s += target;
-	// oscPrint(s);
+	oscPrint(s);
 	commandGo(target);
 }
 
@@ -232,26 +232,25 @@ void onOSCkey(OSCMessage *_mes){
 	int keyframe = _mes->getArgInt32(0);
 	String s = "Received go to keyframe";
 	s += _mes->getArgInt32(0);
-	// oscPrint(s);
+	oscPrint(s);
 	commandGoKey(keyframe);
 }
 
 void onOSChome(OSCMessage *_mes){
 	String s = "Going to home";
-	// oscPrint(s);
+	oscPrint(s);
 	commandGoHome();
 }
 
 void onOSCsetHome(OSCMessage *_mes){
 	commandSetHomeHere();
 	String s = "Set home";
-	// oscPrint(s);
+	oscPrint(s);
 }
 
 void onOSCrequestStatus(OSCMessage *_mes){
 	String s = commandGetPos();
 	oscPrint(s);
-	// oscPrint();
 }
 
 void onOSCset1(OSCMessage *_mes){commandSetKeyValue(1,_mes->getArgInt32(0));}
