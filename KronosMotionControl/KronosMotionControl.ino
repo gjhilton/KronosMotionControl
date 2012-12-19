@@ -244,7 +244,7 @@ void onOSCsetHome(OSCMessage *_mes){
 }
 
 void onOSCrequestStatus(OSCMessage *_mes){
-	String s = commandGetPos();
+	String s = "i am kronos" ;// commandGetPos();
 	oscPrint(s);
 }
 
@@ -254,14 +254,11 @@ void onOSCset3(OSCMessage *_mes){commandSetKeyValue(3,_mes->getArgInt32(0));}
 void onOSCset4(OSCMessage *_mes){commandSetKeyValue(4,_mes->getArgInt32(0));}
 void onOSCset5(OSCMessage *_mes){commandSetKeyValue(5,_mes->getArgInt32(0));}
 void onOSCset6(OSCMessage *_mes){commandSetKeyValue(6,_mes->getArgInt32(0));}
-void onOSCGetPos()		{
-	String s = commandGetPos();
-	oscPrint(s);
-}
 
 void oscBegin(){
 	Ethernet.begin(myMac ,myIp);
 	server.begin(oscListenPort);
+	
 	server.addCallback(OSC_ADDR_GO, &onOSCgo);
 	server.addCallback(OSC_ADDR_GO_KEY, 	&onOSCkey);
 	server.addCallback(OSC_ADDR_GO_HOME, 	&onOSChome);
@@ -273,14 +270,19 @@ void oscBegin(){
 	server.addCallback(OSC_ADDR_SET_KEY6, 	&onOSCset6);
 	server.addCallback(OSC_ADDR_SET_HOME, 	&onOSCsetHome);
 	server.addCallback(OSC_ADDR_REQUEST, 	&onOSCrequestStatus);
+
 }
 
 void oscPrint(String s){
+	NOTIFY(s);
+	
+	/*
 	OSCMessage m;
 	m.setAddress(oscDestinationIP,oscDestinationPort);
 	m.beginMessage(OSC_ADDR_REPLY);
-	char c[s.length()]; 
-	s.toCharArray(c, s.length());
+	char c[] = "executing command";
 	m.addArgString(c);
 	client.send(&m);
+	*/
+	
 }
