@@ -216,23 +216,36 @@ void onOSCNotImplemented(OSCMessage *_mes){
 }
 
 void onOSCgo(OSCMessage *_mes){
-	oscPrint("Received go");
-	commandGo(_mes->getArgInt32(0));
+	int target = _mes->getArgInt32(0);
+	String s = "Going by ";
+	s += target;
+	oscPrint(s);
+	commandGo(target);
 }
 
 void onOSCkey(OSCMessage *_mes){
-	oscPrint("Received go to keyframe");
-	commandGoKey(_mes->getArgInt32(0));
+	int keyframe = _mes->getArgInt32(0);
+	String s = "Received go to keyframe";
+	s += _mes->getArgInt32(0);
+	oscPrint(s);
+	commandGoKey(keyframe);
 }
 
 void onOSChome(OSCMessage *_mes){
-	oscPrint("Received go to home");
+	String s = "Going to home";
+	oscPrint(s);
 	commandGoHome();
 }
 
 void onOSCsetHome(OSCMessage *_mes){
 	commandSetHomeHere();
-	oscPrint("Set home");
+	String s = "Set home";
+	oscPrint(s);
+}
+
+void onOSCrequestStatus(OSCMessage *_mes){
+	String s = commandGetPos();
+	oscPrint(s);
 }
 
 void onOSCset1(OSCMessage *_mes){commandSetKeyValue(1,_mes->getArgInt32(0));}
@@ -259,6 +272,7 @@ void oscBegin(){
 	server.addCallback(OSC_ADDR_SET_KEY5, 	&onOSCset5);
 	server.addCallback(OSC_ADDR_SET_KEY6, 	&onOSCset6);
 	server.addCallback(OSC_ADDR_SET_HOME, 	&onOSCsetHome);
+	server.addCallback(OSC_ADDR_REQUEST, 	&onOSCrequestStatus);
 }
 
 void oscPrint(String s){
