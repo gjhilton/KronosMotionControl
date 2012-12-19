@@ -16,6 +16,7 @@ SerialController::SerialController(int baud){
 
 void SerialController::begin(){
 	Serial.begin(baudrate);
+	/*
 	while (!Serial) {
 		;
 	}
@@ -23,7 +24,7 @@ void SerialController::begin(){
 	while (Serial.available() <= 0) {
 		Serial.println(STR_WAIT);
 		delay(1000); // ie 1 second
-	}
+	}*/
 }
 
 void SerialController::loop(){
