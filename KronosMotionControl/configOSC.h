@@ -7,4 +7,6 @@
 #define OSC_ADDR_SET_KEY4 	"kronos/set/key4"	// pass an integer for distance from home
 #define OSC_ADDR_SET_KEY5 	"kronos/set/key5"	// pass an integer for distance from home
 #define OSC_ADDR_SET_KEY6 	"kronos/set/key6"	// pass an integer for distance from home
-#define OSC_ADDR_SET_HOME 	"kronos/set/home"	
+#define OSC_ADDR_SET_HOME 	"kronos/set/home"
+
+#define OSC_ADDR_REPLY 		"kronos/reply"	

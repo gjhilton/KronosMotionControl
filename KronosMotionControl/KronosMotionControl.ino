@@ -65,19 +65,19 @@ void commandGo(int steps){
 	s += steps;
 	s += " steps";
 	NOTIFY(s);
-	motor.driveByRelative(steps);
+	//motor.driveByRelative(steps);
 }
 
 void commandGoHome(){
 	NOTIFY("go -> home");
-	motor.driveHome();
+	//motor.driveHome();
 }
 
 void commandGoKey(int key){
 	String s = String("go -> to position ");
 	s += key;
 	NOTIFY(s);
-	motor.driveToKeyframe(key);
+	//motor.driveToKeyframe(key);
 }
 
 void commandSetHomeHere(){
@@ -248,4 +248,11 @@ void oscBegin(){
 	server.addCallback(OSC_ADDR_SET_HOME, 	&onOSCsetHome);
 }
 
-
+void oscPrint(String s){
+	OSCMessage m;
+	m.setAddress(oscDestinationIP,oscDestinationPort);
+	m.beginMessage(OSC_ADDR_REPLY);
+	char str[]="simple send2 !!";
+	m.addArgString(str);
+	client.send(&m);
+}
