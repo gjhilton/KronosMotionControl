@@ -65,19 +65,19 @@ void commandGo(int steps){
 	s += steps;
 	s += " steps";
 	NOTIFY(s);
-	//motor.driveByRelative(steps);
+	motor.driveByRelative(steps);
 }
 
 void commandGoHome(){
 	NOTIFY("go -> home");
-	//motor.driveHome();
+	motor.driveHome();
 }
 
 void commandGoKey(int key){
 	String s = String("go -> to position ");
 	s += key;
 	NOTIFY(s);
-	//motor.driveToKeyframe(key);
+	motor.driveToKeyframe(key);
 }
 
 void commandSetHomeHere(){
@@ -186,7 +186,7 @@ void serialBegin(){
 	serialport.addCommand("%", &onSerialSetKey5, 	"set position 5 here");
 	serialport.addCommand("^", &onSerialSetKey6, 	"set position 6 here");
 	
-	serialport.addCommand("q", &onSerialGoUp1, 	"up 1");
+	serialport.addCommand("q", &onSerialGoUp1, 		"up 1");
 	serialport.addCommand("w", &onSerialGoUp10, 	"up 10");
 	serialport.addCommand("e", &onSerialGoUp100, 	"up 100");
 	serialport.addCommand("r", &onSerialGoUp200, 	"up 200");
