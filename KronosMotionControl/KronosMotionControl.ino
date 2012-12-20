@@ -80,6 +80,13 @@ void commandGoKey(int key){
 	motor.driveToKeyframe(key);
 }
 
+void commandGoKeyEased(int key){
+	String s = String("go -> to position ");
+	s += key;
+	NOTIFY(s);
+	motor.driveToKeyframeEased(key);
+}
+
 void commandSetHomeHere(){
 	motor.setAtHome();
 	String s = String("set -> home at ");
@@ -234,6 +241,14 @@ void onOSCkey(OSCMessage *_mes){
 	commandGoKey(keyframe);
 }
 
+void onOSCkeyEased(OSCMessage *_mes){
+	int keyframe = _mes->getArgInt32(0);
+	String s = "Received easy go to keyframe";
+	s += _mes->getArgInt32(0);
+	oscPrint(s);
+	commandGoKeyEased(keyframe);
+}
+
 void onOSChome(OSCMessage *_mes){
 	String s = "Going to home";
 	oscPrint(s);
@@ -273,6 +288,7 @@ void oscBegin(){
 	
 	server.addCallback(OSC_ADDR_GO, 				&onOSCgo);
 	server.addCallback(OSC_ADDR_GO_KEY, 			&onOSCkey);
+	server.addCallback(OSC_ADDR_GO_KEY_EASED, 		&onOSCkeyEased);
 	server.addCallback(OSC_ADDR_GO_HOME, 			&onOSChome);
 	server.addCallback(OSC_ADDR_SET_KEY1, 			&onOSCset1);
 	server.addCallback(OSC_ADDR_SET_KEY2, 			&onOSCset2);

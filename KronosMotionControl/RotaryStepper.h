@@ -12,7 +12,8 @@
 
 #include "interpolation.h"
 
-#define MAX_N_KEYFRAMES 5
+#define MAX_N_KEYFRAMES 7
+#define EASE_TIME 18000
 #define DEFAULT_SPEED_RPM 1
 
 class RotaryStepper{
@@ -37,6 +38,7 @@ public:
 	void driveToAbsoluteTarget(int abs_target);
 	void driveToAbsoluteTargetEased(int abs_target, int total_additional_ms=0, Interpolation kind = LINEAR);
 	void driveToKeyframe(int index);
+	void driveToKeyframeEased(int index);
 	
 	float stepToDegrees(int step);
 	float stepToRotations(int step);

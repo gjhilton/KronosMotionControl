@@ -19,7 +19,7 @@ RotaryStepper::RotaryStepper(int number_of_steps_per_rotation, int pin_1, int pi
 	
 	initPins();
 
-	step_delay = 5;
+	step_delay = 4;
 	
 }
 
@@ -109,6 +109,12 @@ void RotaryStepper::driveHome() {
 void RotaryStepper::driveToKeyframe(int index){
 	if ((home_is_set) && (index < MAX_N_KEYFRAMES) && (keyframes_set[index])){
 		driveToAbsoluteTarget(getKeyframeAbsolute(index));
+	}
+}
+
+void RotaryStepper::driveToKeyframeEased(int index){
+	if ((home_is_set) && (index < MAX_N_KEYFRAMES) && (keyframes_set[index])){
+		driveToAbsoluteTargetEased(getKeyframeAbsolute(index),EASE_TIME,CIRCULAR_OUT);
 	}
 }
 

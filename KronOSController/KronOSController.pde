@@ -13,7 +13,7 @@ String[] messagesReceived;
 String[] messagesSent;
 
 final String OSC_ADDR_GO = 					"kronos/go";
-final String OSC_ADDR_GO_KEY = 				"kronos/key";
+final String OSC_ADDR_GO_KEY = 				"kronos/key/eased";
 final String OSC_ADDR_GO_HOME = 			"kronos/home";
 final String OSC_ADDR_SET_KEY = 			"kronos/set/key";
 final String OSC_ADDR_SET_HOME = 			"kronos/set/home";
@@ -21,7 +21,7 @@ final String OSC_ADDR_REQUEST_STATUS =		"kronos/request/status";
 final String OSC_ADDR_REQUEST_KEYS =		"kronos/request/keys";
 
 final int N_LINES = 20;
-final int KRONOS_HEIGHT = 2000;
+final int KRONOS_HEIGHT = 5000;
 final int CONTROL_WIDTH = 130;
 final int CONTROL_SPACING = 4;
 
