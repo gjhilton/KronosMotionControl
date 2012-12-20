@@ -1,4 +1,4 @@
-// v0.6
+// v0.8
 
 import oscP5.*;
 import netP5.*;
@@ -12,12 +12,13 @@ NetAddress kronosIP;
 String[] messagesReceived;
 String[] messagesSent;
 
-final String OSC_ADDR_GO = 		"kronos/go";
-final String OSC_ADDR_GO_KEY = 		"kronos/key";
-final String OSC_ADDR_GO_HOME = 	"kronos/home";
-final String OSC_ADDR_SET_KEY = 	"kronos/set/key";
-final String OSC_ADDR_SET_HOME = 	"kronos/set/home";
-final String OSC_ADDR_REQUEST =         "kronos/request";
+final String OSC_ADDR_GO = 					"kronos/go";
+final String OSC_ADDR_GO_KEY = 				"kronos/key";
+final String OSC_ADDR_GO_HOME = 			"kronos/home";
+final String OSC_ADDR_SET_KEY = 			"kronos/set/key";
+final String OSC_ADDR_SET_HOME = 			"kronos/set/home";
+final String OSC_ADDR_REQUEST_STATUS =		"kronos/request/status";
+final String OSC_ADDR_REQUEST_KEYS =		"kronos/request/keys";
 
 final int N_LINES = 20;
 final int KRONOS_HEIGHT = 2000;
@@ -35,7 +36,7 @@ void setup() {
 	frameRate(25);
 
 	oscP5 = new OscP5(this,12000);
-	kronosIP = new NetAddress("127.0.0.1",12000);
+	kronosIP = new NetAddress("192.168.1.123",10000);
 
 	cp5 = new ControlP5(this);
 	setupTextboxes();
@@ -188,7 +189,8 @@ void setupAutoDrive(){
 	int col_kfv_x = col_kfg_x + CONTROL_WIDTH;
 	int col_kfs_x = col_kfv_x + CONTROL_WIDTH + CONTROL_SPACING;
 	
-        addbutton("status",     "status", 4, 500, y+50);
+    addbutton("status",     "status", 4, 500, y+50);
+	addbutton("skeys",  	"show keys", 4, 500, y+100);
 
 	addbutton("ghome", 		"go home", 4, col_kfg_x, y+=50);
 	addbutton("shome", 		"set home here", 0, col_kfs_x, y);
@@ -266,7 +268,8 @@ void gkf5(int v)	{oscSend(OSC_ADDR_GO_KEY,5);}
 void gkf6(int v)	{oscSend(OSC_ADDR_GO_KEY,6);}
 void ghome(int v)	{oscSend(OSC_ADDR_GO_HOME);}
 void shome(int v)	{oscSend(OSC_ADDR_SET_HOME);}
-void status(int v)      {oscSend(OSC_ADDR_REQUEST);}
+void status(int v)	{oscSend(OSC_ADDR_REQUEST_STATUS);}
+void skeys(int v)	{oscSend(OSC_ADDR_REQUEST_KEYS);}
 
 void setKF(int which){
 	oscSend(OSC_ADDR_SET_KEY + which, int(cp5.getController("k"+which).getValue()));
