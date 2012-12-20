@@ -6,7 +6,7 @@
 #include <Ethernet.h>
 #include <ArdOSC.h>
 
-#include "SerialController.h"
+// #include "SerialController.h"
 #include "RotaryStepper.h"
 #include "configOSC.h"
 
@@ -54,8 +54,6 @@ void loop(){
 	if(server.aviableCheck()>0){}
 	// serialport.loop();
 	delay(50);
-	//oscPrint();
-	//delay(1000);
 }
 
 /*	---------------------------------------------------- 
@@ -133,7 +131,7 @@ String commandGetPos(){
 /*	---------------------------------------------------- 
 	SERIAL CONTROL FACADE
 	---------------------------------------------------- */
-
+/*
 void onSerialGoKey1()		{commandGoKey(1);}
 void onSerialGoKey2()		{commandGoKey(2);}
 void onSerialGoKey3()		{commandGoKey(3);}
@@ -175,7 +173,6 @@ void onSerialGetKeys()		{
 }
 
 void serialBegin(){
-	/*
 	serialport.begin();
 	
 	serialport.addCommand("0", &commandGoHome, 		"go home");
@@ -209,8 +206,9 @@ void serialBegin(){
 	serialport.addCommand(" ", &onSerialGetPos, 	"get position");
 	serialport.addCommand("-", &onSerialGetKeys, 	"get keyframes");
 	serialport.addCommand("p", &onSerialOSCping, 	"ping osc");
-	*/
+	
 }
+*/
 
 /*	---------------------------------------------------- 
 	OSC CONTROL FACADE
@@ -253,6 +251,15 @@ void onOSCrequestStatus(OSCMessage *_mes){
 	oscPrint(s);
 }
 
+void onOSCrequestKeys(OSCMessage *_mes){
+	String s = String("keys -> ");
+	for (int k=1; k<7; k++){
+		s += motor.getKeyframeRelativeToHome(k);
+		s += " ";
+	}
+	oscPrint(s);
+}
+
 void onOSCset1(OSCMessage *_mes){commandSetKeyValue(1,_mes->getArgInt32(0));}
 void onOSCset2(OSCMessage *_mes){commandSetKeyValue(2,_mes->getArgInt32(0));}
 void onOSCset3(OSCMessage *_mes){commandSetKeyValue(3,_mes->getArgInt32(0));}
@@ -264,26 +271,26 @@ void oscBegin(){
 	Ethernet.begin(myMac ,myIp);
 	server.begin(oscListenPort);
 	
-	server.addCallback(OSC_ADDR_GO, &onOSCgo);
-	server.addCallback(OSC_ADDR_GO_KEY, 	&onOSCkey);
-	server.addCallback(OSC_ADDR_GO_HOME, 	&onOSChome);
-	server.addCallback(OSC_ADDR_SET_KEY1, 	&onOSCset1);
-	server.addCallback(OSC_ADDR_SET_KEY2, 	&onOSCset2);
-	server.addCallback(OSC_ADDR_SET_KEY3, 	&onOSCset3);
-	server.addCallback(OSC_ADDR_SET_KEY4, 	&onOSCset4);
-	server.addCallback(OSC_ADDR_SET_KEY5, 	&onOSCset5);
-	server.addCallback(OSC_ADDR_SET_KEY6, 	&onOSCset6);
-	server.addCallback(OSC_ADDR_SET_HOME, 	&onOSCsetHome);
-	server.addCallback(OSC_ADDR_REQUEST, 	&onOSCrequestStatus);
-
+	server.addCallback(OSC_ADDR_GO, 				&onOSCgo);
+	server.addCallback(OSC_ADDR_GO_KEY, 			&onOSCkey);
+	server.addCallback(OSC_ADDR_GO_HOME, 			&onOSChome);
+	server.addCallback(OSC_ADDR_SET_KEY1, 			&onOSCset1);
+	server.addCallback(OSC_ADDR_SET_KEY2, 			&onOSCset2);
+	server.addCallback(OSC_ADDR_SET_KEY3, 			&onOSCset3);
+	server.addCallback(OSC_ADDR_SET_KEY4, 			&onOSCset4);
+	server.addCallback(OSC_ADDR_SET_KEY5, 			&onOSCset5);
+	server.addCallback(OSC_ADDR_SET_KEY6, 			&onOSCset6);
+	server.addCallback(OSC_ADDR_SET_HOME, 			&onOSCsetHome);
+	server.addCallback(OSC_ADDR_REQUEST_STATUS, 	&onOSCrequestStatus);
+	server.addCallback(OSC_ADDR_REQUEST_KEYS, 		&onOSCrequestKeys);
 }
 
 void oscPrint(String s){
-  OSCMessage global_mes;
-  global_mes.setAddress(oscDestinationIP,oscDestinationPort);
-  global_mes.beginMessage(OSC_ADDR_REQUEST);
+	OSCMessage m;
+	m.setAddress(oscDestinationIP,oscDestinationPort);
+	m.beginMessage(OSC_ADDR_REPLY);
 	char c[s.length()+1];
 	s.toCharArray(c, s.length()+1);
-  global_mes.addArgString(c);
-  client.send(&global_mes);
+	m.addArgString(c);
+	client.send(&m);
 }
