@@ -9,8 +9,8 @@ final int DARK = color(35,35,35);
 final int POSITION_CONTROL_WIDTH = 70;
 
 void setup() {
-  size(1024,768);
-  cp5 = new ControlP5(this);
+	size(1200,700);
+	cp5 = new ControlP5(this);
   
 	int x = 40;
 	int y = 40;
@@ -26,6 +26,36 @@ void setup() {
 	addPosition("pos5",(x+spacing*4),y);
 	addPosition("pos6",(x+spacing*5),y);
 
+	x = 650;
+	y = 8;
+	int vspacing=32;
+	addDrvieButton("UP 1000", "1000 UP",x,y+=vspacing, false);
+	addDrvieButton("UP 500", "500 UP",x,y+=vspacing, false);
+	addDrvieButton("UP 100", "100 UP",x,y+=vspacing, false);
+	addDrvieButton("UP 50", "50 UP",x,y+=vspacing, false);
+	addDrvieButton("UP 10", "10 UP",x,y+=vspacing, false);
+	addDrvieButton("UP 5", "5 UP",x,y+=vspacing, false);
+	addDrvieButton("UP 1", "1 UP",x,y+=vspacing, false);
+	y+=52;
+	addDrvieButton("DOWN 1", "DOWN 1",x,y+=vspacing, true);
+	addDrvieButton("DOWN 5", "DOWN 5",x,y+=vspacing, true);
+	addDrvieButton("DOWN 10", "DOWN 10",x,y+=vspacing, true);
+	addDrvieButton("DOWN 50", "DOWN 50",x,y+=vspacing, true);
+	addDrvieButton("DOWN 100", "DOWN 100",x,y+=vspacing, true);
+	addDrvieButton("DOWN 500", "DOWN 500",x,y+=vspacing, true);
+	addDrvieButton("DOWN 1000", "DOWN 1000",x,y+=vspacing, true);
+}
+
+void addDrvieButton(String name, String label, int x, int y, Boolean rhs){
+	cp5.addButton(name)
+		.setPosition(x,y)
+		.setLabel(label)
+		.setSize(POSITION_CONTROL_WIDTH,30)
+		.setColorForeground(color(120))
+		.setColorActive(color(255))
+		.setColorLabel(color(255))
+	;
+	if (rhs) cp5.getController(name).getCaptionLabel().align(ControlP5.RIGHT, ControlP5.CENTER);
 }
 
 void addGoButton(String name, String label, int x, int y){
