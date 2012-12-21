@@ -12,21 +12,21 @@ void setup() {
 	size(1200,700);
 	cp5 = new ControlP5(this);
   
-	int x = 40;
+	int x = 600;
 	int y = 40;
 	int spacing = 80;
 	
 	addHome(x,y);
 	x += spacing;
 	
-	addPosition("pos1",(x+spacing*0),y);
-	addPosition("pos2",(x+spacing*1),y);
-	addPosition("pos3",(x+spacing*2),y);
-	addPosition("pos4",(x+spacing*3),y);
-	addPosition("pos5",(x+spacing*4),y);
-	addPosition("pos6",(x+spacing*5),y);
+	addPosition("position 1",(x+spacing*0),y);
+	addPosition("position 2",(x+spacing*1),y);
+	addPosition("position 3",(x+spacing*2),y);
+	addPosition("position 4",(x+spacing*3),y);
+	addPosition("position 5",(x+spacing*4),y);
+	addPosition("position 6",(x+spacing*5),y);
 
-	x = 650;
+	x = 500;
 	y = 8;
 	int vspacing=32;
 	addDrvieButton("UP 1000", "1000 UP",x,y+=vspacing, false);
@@ -67,6 +67,7 @@ void addGoButton(String name, String label, int x, int y){
 		.setColorActive(color(255))
 		.setColorLabel(color(255))
 	;
+	cp5.getController(name).getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 }
 
 void addHome(int x, int y){
@@ -98,14 +99,7 @@ void addPosition(String name, int x, int y){
 	;
 	
 	y+= 550;
-	cp5.addButton(name + "go")
-		.setPosition(x,y)
-		.setLabel("Go")
-		.setSize(POSITION_CONTROL_WIDTH,40)
-		.setColorForeground(color(120))
-		.setColorActive(color(255))
-		.setColorLabel(color(255))
-	;
+	addGoButton(name + "go",name,x,y);
 
 	y+= 50;
 	String easing_checkbox_name = name + "easing";
