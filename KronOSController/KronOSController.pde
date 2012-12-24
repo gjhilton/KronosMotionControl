@@ -19,11 +19,11 @@ final int CONTROL_SPACING = 4;
 
 final String EMPTY = "";
 
-final int COLOUR_BG = color(1,34,51);
-final int COLOUR_1 = color(1,34,51); 		// drive buttons
-final int COLOUR_2 = color(3,72,106); 		// go buttons
-final int COLOUR_3 = color(231,197,6); 	// set buttons
-final int COLOUR_4 = color(249,112,0); 		// set buttons over
+final int COLOUR_BG = 	color(1,34,51);
+final int COLOUR_1 = 	color(1,34,51); 		// drive buttons
+final int COLOUR_2 = 	color(3,72,106); 		// go buttons
+final int COLOUR_3 = 	color(231,197,6); 		// set buttons
+final int COLOUR_4 = 	color(249,112,0); 		// set buttons over
 
 ControlP5 cp5;
 Textarea incomingOSC, outgoingOSC;
@@ -44,12 +44,12 @@ void setup() {
 
 	cp5 = new ControlP5(this);
 	setupManualDrive();
-	setupAutoDrive();
+	// setupAutoDrive();
 }
 
 void draw() {
 	background(COLOUR_BG); 
-	messagepool.draw(10,10);
+	messagepool.draw(10,400);
 }
 
 void oscEvent(OscMessage m) {
@@ -219,7 +219,7 @@ void setKF(int which){
 
 public class MessagePool {
 	private Message[] messages;
-	private int size, top, left;
+	private int size;
 	private PApplet applet;
 	private final int SENT_COLOUR = color(100,100,255);
 	private final int RECEIVED_COLOUR = color(200,200,200);
@@ -240,13 +240,16 @@ public class MessagePool {
 	}
 	public void draw(int left, int top){
 		for (int i = 0; i <size; i++) {
-			if (messages[i].incoming){
-				fill(RECEIVED_COLOUR);
-			} else {
-				fill(SENT_COLOUR);
-			}
 			if (!messages[i].text.equals(EMPTY)){
-				applet.text(messages[i].timestamp +": " + messages[i].text,left,top);
+				String str;
+				if (messages[i].incoming){
+					str = "TX ";
+					fill(RECEIVED_COLOUR);
+				} else {
+					str = "RX ";
+					fill(SENT_COLOUR);
+				}
+				applet.text(str + messages[i].timestamp + ": " + messages[i].text,left,top);
 			}
 			top += LINEHEIGHT;
 		}
@@ -256,9 +259,9 @@ public class MessagePool {
 class Message { 
 	String timestamp, text;
 	Boolean incoming;
-	Message (String thetext, Boolean isincoming) {  
+	Message (String _text, Boolean _incoming) {  
 		timestamp = hour() + ":" + minute() + ":" + second(); 
-		text = thetext;
-		incoming = isincoming;
+		text = _text;
+		incoming = _incoming;
 	} 
 } 
