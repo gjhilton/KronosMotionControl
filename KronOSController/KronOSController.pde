@@ -4,14 +4,6 @@ import oscP5.*;
 import netP5.*;
 import controlP5.*;
 
-ControlP5 cp5;
-Textarea incomingOSC, outgoingOSC;
-OscP5 oscP5;
-NetAddress kronosIP;
-
-String[] messagesReceived;
-String[] messagesSent;
-
 final String OSC_ADDR_GO = 					"kronos/go";
 final String OSC_ADDR_GO_KEY = 				"kronos/key/eased";
 final String OSC_ADDR_GO_HOME = 			"kronos/home";
@@ -25,121 +17,70 @@ final int KRONOS_HEIGHT = 5000;
 final int CONTROL_WIDTH = 130;
 final int CONTROL_SPACING = 4;
 
+final String EMPTY = "";
+
 final int COLOUR_BG = color(1,34,51);
 final int COLOUR_1 = color(1,34,51); 		// drive buttons
 final int COLOUR_2 = color(3,72,106); 		// go buttons
 final int COLOUR_3 = color(231,197,6); 	// set buttons
 final int COLOUR_4 = color(249,112,0); 		// set buttons over
 
+ControlP5 cp5;
+Textarea incomingOSC, outgoingOSC;
+OscP5 oscP5;
+NetAddress kronosIP;
+MessagePool messagepool = new MessagePool(this,N_LINES);
+
+String[] messagesReceived;
+String[] messagesSent;
+
 void setup() {
 	size(1024,700);
 	frameRate(25);
 
 	oscP5 = new OscP5(this,12000);
-	kronosIP = new NetAddress("192.168.1.123",10000);
+	//kronosIP = new NetAddress("192.168.1.123",10000);
+	kronosIP = new NetAddress("127.0.0.1",12000);
 
 	cp5 = new ControlP5(this);
-	setupTextboxes();
 	setupManualDrive();
 	setupAutoDrive();
 }
 
 void draw() {
 	background(COLOUR_BG); 
-	drawTextboxes();
+	messagepool.draw(10,10);
 }
 
 void oscEvent(OscMessage m) {
-	String s = m.addrPattern();
+	String s = m.addrPattern().toUpperCase();
 	if (m.typetag().equals("i")){
-		s += "->" + str(m.get(0).intValue());
+		s += " -> " + str(m.get(0).intValue());
 	}
 	if (m.typetag().equals("s")){
-		s += "->" + m.get(0).stringValue();
+		s += " -> " + m.get(0).stringValue();
 	}
-	addReceivedMessage(s);
+	messagepool.add(s,true);
 }
 
 void oscSend(String address, String payload){
 	OscMessage m = new OscMessage(address);
 	m.add(payload);
 	oscP5.send(m, kronosIP);
-	addSentMessage(address, payload);
+	messagepool.add(address.toUpperCase() + " -> " + payload,false);
 }
 
 void oscSend(String address, int payload){
 	OscMessage m = new OscMessage(address);
 	m.add(payload);
 	oscP5.send(m, kronosIP);
-	addSentMessage(address, str(payload));
+	messagepool.add(address.toUpperCase() + " -> " + payload,false);
 }
 
 void oscSend(String address){
 	OscMessage m = new OscMessage(address);
 	oscP5.send(m, kronosIP);
-	addSentMessage(address);
-}
-
-void addSentMessage(String address, String payload){
-	for (int i = 0; i <N_LINES-1; i++) {
-		messagesReceived[i] = messagesReceived[i+1];
-		messagesSent[i] = messagesSent[i+1];
-	}
-	messagesSent[N_LINES-1] = hour() + ":" + minute() + ":" + second() + " SEND " + address + "->" + payload;
-	messagesReceived[N_LINES-1] = "";
-}
-
-void addSentMessage(String address){
-	for (int i = 0; i <N_LINES-1; i++) {
-		messagesReceived[i] = messagesReceived[i+1];
-		messagesSent[i] = messagesSent[i+1];
-	}
-	messagesSent[N_LINES-1] = hour() + ":" + minute() + ":" + second() + " SEND " + address;
-	messagesReceived[N_LINES-1] = "";
-}
-
-void addReceivedMessage(String payload){
-	for (int i = 0; i <N_LINES-1; i++) {
-		messagesReceived[i] = messagesReceived[i+1];
-		messagesSent[i] = messagesSent[i+1];
-	}
-	messagesSent[N_LINES-1] = "";
-	messagesReceived[N_LINES-1] = hour() + ":" + minute() + ":" + second() + " " + payload;
-}
-
-void setupTextboxes(){
-	outgoingOSC = cp5.addTextarea("outgoing")
-                  .setPosition(12,400)
-                  .setSize(500,400)
-                  .setFont(createFont("arial",11))
-                  .setLineHeight(14)
-                  .setColor(color(152,152,152))
-				  .setColorBackground(10);
-	incomingOSC = cp5.addTextarea("incoming")
-                  .setPosition(500,400)
-                  .setSize(500,400)
-                  .setFont(createFont("arial",11))
-                  .setLineHeight(14)
-                  .setColor(color(255,255,255))
-					.setColorBackground(10);
-	
-	messagesReceived = new String[N_LINES];
-	messagesSent = new String[N_LINES];
-	for (int i = 0; i <N_LINES; i++) {
-		messagesReceived[i] = "";
-		messagesSent[i] = "";
-	}
-}
-
-void drawTextboxes(){
-	String in = "";
-	String out = "";
-	for (int i = 0; i <N_LINES; i++) {
-		in = in + messagesReceived[i] + "\n";
-		out = out + messagesSent[i] + "\n";
-	}
-	outgoingOSC.setText(out);
-	incomingOSC.setText(in);
+	messagepool.add(address.toUpperCase(),false);
 }
 
 void addbutton(String f, String label, int colour, int x, int y){
@@ -275,3 +216,49 @@ void setKF(int which){
 	oscSend(OSC_ADDR_SET_KEY + which, int(cp5.getController("k"+which).getValue()));
 	cp5.saveProperties(("keyframe.properties"));
 }
+
+public class MessagePool {
+	private Message[] messages;
+	private int size, top, left;
+	private PApplet applet;
+	private final int SENT_COLOUR = color(100,100,255);
+	private final int RECEIVED_COLOUR = color(200,200,200);
+	private final int LINEHEIGHT = 14;
+	MessagePool (PApplet _applet, int _size) {
+		applet = _applet;
+		size = _size;
+		messages = new Message[size];
+		for (int i = 0; i <size; i++) {
+			messages[i] = new Message("",false);
+		}
+	}
+	public void add(String thetext, Boolean isincoming){
+		for (int i = 0; i <size-1; i++) {
+			messages[i] = messages[i+1];
+		}
+		messages[size-1] = new Message(thetext,isincoming);
+	}
+	public void draw(int left, int top){
+		for (int i = 0; i <size; i++) {
+			if (messages[i].incoming){
+				fill(RECEIVED_COLOUR);
+			} else {
+				fill(SENT_COLOUR);
+			}
+			if (!messages[i].text.equals(EMPTY)){
+				applet.text(messages[i].timestamp +": " + messages[i].text,left,top);
+			}
+			top += LINEHEIGHT;
+		}
+	}
+}
+
+class Message { 
+	String timestamp, text;
+	Boolean incoming;
+	Message (String thetext, Boolean isincoming) {  
+		timestamp = hour() + ":" + minute() + ":" + second(); 
+		text = thetext;
+		incoming = isincoming;
+	} 
+} 
