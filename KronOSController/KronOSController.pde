@@ -26,13 +26,9 @@ final int COLOUR_3 = 	color(231,197,6); 		// set buttons
 final int COLOUR_4 = 	color(249,112,0); 		// set buttons over
 
 ControlP5 cp5;
-Textarea incomingOSC, outgoingOSC;
 OscP5 oscP5;
 NetAddress kronosIP;
-MessagePool messagepool = new MessagePool(this,N_LINES);
-
-String[] messagesReceived;
-String[] messagesSent;
+MessagePool messagepool;
 
 void setup() {
 	size(1024,700);
@@ -41,10 +37,9 @@ void setup() {
 	oscP5 = new OscP5(this,12000);
 	//kronosIP = new NetAddress("192.168.1.123",10000);
 	kronosIP = new NetAddress("127.0.0.1",12000);
-
+	messagepool = new MessagePool(this,N_LINES);
 	cp5 = new ControlP5(this);
 	setupManualDrive();
-	// setupAutoDrive();
 }
 
 void draw() {
@@ -63,12 +58,6 @@ void oscEvent(OscMessage m) {
 	messagepool.add(s,true);
 }
 
-void oscSend(String address, String payload){
-	OscMessage m = new OscMessage(address);
-	m.add(payload);
-	oscP5.send(m, kronosIP);
-	messagepool.add(address.toUpperCase() + " -> " + payload,false);
-}
 
 void oscSend(String address, int payload){
 	OscMessage m = new OscMessage(address);
@@ -243,10 +232,10 @@ public class MessagePool {
 			if (!messages[i].text.equals(EMPTY)){
 				String str;
 				if (messages[i].incoming){
-					str = "TX ";
+					str = "RX ";
 					fill(RECEIVED_COLOUR);
 				} else {
-					str = "RX ";
+					str = "TX ";
 					fill(SENT_COLOUR);
 				}
 				applet.text(str + messages[i].timestamp + ": " + messages[i].text,left,top);
