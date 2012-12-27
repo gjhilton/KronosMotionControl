@@ -45,6 +45,7 @@ final String OSC_ADDR_REQUEST_KEYS =		"kronos/request/keys";
  *
  * --------------------------------------------------------------------------- */
 
+final boolean AUTOSYNC = true;
 final int CONTROL_WIDTH = 130;
 final int CONTROL_SPACING = 4;
 final String EMPTY = "";
@@ -76,6 +77,7 @@ OscP5 oscP5;
 MessagePool messagepool;
 Toggle[] cueToggles = new Toggle[N_POSITIONS];
 Toggle[] easeToggles = new Toggle[N_POSITIONS];
+boolean inited = false;
 
 /* ----------------------------------------------------------------------------
  *
@@ -183,6 +185,30 @@ void shome(int v)	{oscSendKronos(OSC_ADDR_SET_HOME);}
 void status(int v)	{oscSendKronos(OSC_ADDR_REQUEST_STATUS);}
 void skeys(int v)	{oscSendKronos(OSC_ADDR_REQUEST_KEYS);}
 
+void position1set(int v)	{setKF(1);}
+void position2set(int v)	{setKF(2);}
+void position3set(int v)	{setKF(3);}
+void position4set(int v)	{setKF(4);}
+void position5set(int v)	{setKF(5);}
+void position6set(int v)	{setKF(6);}
+
+void setKF(int which){
+	if (inited) {
+		sendKF(which);
+		saveSettings();
+	}
+}
+
+void sendKF(int idx){
+	oscSendKronos(OSC_ADDR_SET_KEY + idx, int(cp5.getController(getPositionSliderName(idx)).getValue()));
+}
+
+void syncKFs(){
+	for (int k=1; k<N_POSITIONS; k++){
+		sendKF(k);
+	}
+}
+
 /* ----------------------------------------------------------------------------
  *
  * IMPLEMENTATION: GUI INITIALISATION
@@ -246,6 +272,9 @@ void setupGUI(){
 		.setColorLabel(WHITE)
 		.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
 	;
+	
+	inited = true;
+	if (AUTOSYNC) syncKFs();
 }
 
 void addDriveButton(String name, String label, int x, int y, Boolean rhs){
@@ -287,7 +316,7 @@ void addHome(int x, int y){
 
 void addPosition(int idx, int x, int y){
 	
-	cp5.addSlider("position"+idx)
+	cp5.addSlider(getPositionSliderName(idx))
 		.setPosition(x,y)
 		.setSize(POSITION_CONTROL_WIDTH,500)
 		.setRange(5000,0)
@@ -297,7 +326,8 @@ void addPosition(int idx, int x, int y){
 		.setColorTickMark(GREY)
 		.setColorBackground(WHITE)
 		.setColorForeground(DARK)
-		.setColorActive(GREY) 
+		.setColorActive(GREY)
+		.setTriggerEvent(Slider.RELEASE)
 	;
 	
 	y+= 550;
@@ -320,8 +350,19 @@ Toggle makeToggle(String name, int idx,int x, int y,String label){
 		.setSize(10, 10)
 		.setLabel(label)
 	;
+	t.addCallback(new CallbackListener() {
+    	public void controlEvent(CallbackEvent theEvent) {
+			if (theEvent.getAction()==ControlP5.ACTION_BROADCAST) {
+				if (inited) saveSettings();
+			}
+		}
+	});
 	t.getCaptionLabel().align(ControlP5.LEFT, ControlP5.CENTER).setPaddingX(15);
 	return t;
+}
+
+String getPositionSliderName(int idx){
+	return "position" + idx + "set";
 }
 
 String getCueCheckboxName(int idx){
@@ -332,21 +373,7 @@ String getEasingCheckboxName(int idx){
 	return "position" + idx + "easing";
 }
 
-/* ----------------------------------------------------------------------------
- *
- * OLD VERSION
- *
- * --------------------------------------------------------------------------- */
-
-void skf1(int v)	{setKF(1);}
-void skf2(int v)	{setKF(2);}
-void skf3(int v)	{setKF(3);}
-void skf4(int v)	{setKF(4);}
-void skf5(int v)	{setKF(5);}
-void skf6(int v)	{setKF(6);}
-
-void setKF(int which){
-	oscSendKronos(OSC_ADDR_SET_KEY + which, int(cp5.getController("k"+which).getValue()));
+void saveSettings(){
 	cp5.saveProperties(("keyframe.properties"));
 }
 
