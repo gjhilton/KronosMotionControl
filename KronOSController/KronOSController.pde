@@ -223,6 +223,29 @@ void setupGUI(){
 	addDriveButton("down100", "DOWN 100",x,y+=vspacing, true);
 	addDriveButton("down500", "DOWN 500",x,y+=vspacing, true);
 	addDriveButton("down1000", "DOWN 1000",x,y+=vspacing, true);
+	
+	// status buttons
+	cp5.addButton("status")
+		.setPosition(40,590)
+		.setLabel("SHOW STATUS")
+		.setSize(300,40)
+		.setColorForeground(GREY)
+		.setColorBackground(GREY)
+		.setColorActive(WHITE)
+		.setColorLabel(WHITE)
+		.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
+	;
+	
+		cp5.addButton("skeys")
+		.setPosition(350,590)
+		.setLabel("SHOW POSITIONS")
+		.setSize(95, 40)
+		.setColorForeground(GREY)
+		.setColorBackground(GREY)
+		.setColorActive(WHITE)
+		.setColorLabel(WHITE)
+		.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
+	;
 }
 
 void addDriveButton(String name, String label, int x, int y, Boolean rhs){
