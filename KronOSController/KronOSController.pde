@@ -118,23 +118,23 @@ void oscEvent(OscMessage m) {
 
 void oscSendAudioCue(int payload){
 	String address = OSC_ADDR_CUE;
+	messagepool.add(address.toUpperCase() + " -> " + payload,false);
 	OscMessage m = new OscMessage(address);
 	m.add(payload);
 	oscP5.send(m, audioIP);
-	messagepool.add(address.toUpperCase() + " -> " + payload,false);
 }
 
 void oscSendKronos(String address, int payload){
+	messagepool.add(address.toUpperCase() + " -> " + payload,false);
 	OscMessage m = new OscMessage(address);
 	m.add(payload);
 	oscP5.send(m, kronosIP);
-	messagepool.add(address.toUpperCase() + " -> " + payload,false);
 }
 
 void oscSendKronos(String address){
+	messagepool.add(address.toUpperCase(),false);
 	OscMessage m = new OscMessage(address);
 	oscP5.send(m, kronosIP);
-	messagepool.add(address.toUpperCase(),false);
 }
 
 /* ----------------------------------------------------------------------------
@@ -363,6 +363,7 @@ public class MessagePool {
 	private final int SENT_COLOUR = color(100,100,255);
 	private final int RECEIVED_COLOUR = color(200,200,200);
 	private final int LINEHEIGHT = 14;
+	private final boolean BOTTOM_UP = false;
 	MessagePool (PApplet _applet, int _size) {
 		applet = _applet;
 		size = _size;
@@ -372,10 +373,17 @@ public class MessagePool {
 		}
 	}
 	public void add(String thetext, Boolean isincoming){
-		for (int i = 0; i <size-1; i++) {
-			messages[i] = messages[i+1];
+		if (BOTTOM_UP){
+			for (int i = 0; i <size-1; i++) {
+				messages[i] = messages[i+1];
+			}
+			messages[size-1] = new Message(thetext,isincoming);
+		} else {
+			for (int i=size-1; i > 0; i--) {
+				messages[i] = messages[i-1];
+			}
+			messages[0] = new Message(thetext,isincoming);
 		}
-		messages[size-1] = new Message(thetext,isincoming);
 	}
 	public void draw(int left, int top){
 		for (int i = 0; i <size; i++) {
