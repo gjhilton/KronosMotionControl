@@ -1,51 +1,97 @@
-// v0.9.1
+/* ----------------------------------------------------------------------------
+ *
+ * KronOSController
+ *
+ * @author		gjhilton
+ * @modified	26/12/2012
+ * @version		2.0.2
+ *
+ * --------------------------------------------------------------------------- */
 
 import oscP5.*;
 import netP5.*;
 import controlP5.*;
 
+/* ----------------------------------------------------------------------------
+ *
+ * CONFIGURATION: OSC
+ *
+ * --------------------------------------------------------------------------- */
+
+//final kronosIP = new NetAddress("192.168.1.123",10000);
+NetAddress kronosIP = new NetAddress("127.0.0.1",12000);
+final int OSC_RX_PORT = 12000;
+
 final String OSC_ADDR_GO = 					"kronos/go";
-final String OSC_ADDR_GO_KEY = 				"kronos/key/eased";
+final String OSC_ADDR_GO_KEY = 				"kronos/key";
+final String OSC_ADDR_GO_KEY_EASED = 		"kronos/key/eased";
 final String OSC_ADDR_GO_HOME = 			"kronos/home";
 final String OSC_ADDR_SET_KEY = 			"kronos/set/key";
 final String OSC_ADDR_SET_HOME = 			"kronos/set/home";
 final String OSC_ADDR_REQUEST_STATUS =		"kronos/request/status";
 final String OSC_ADDR_REQUEST_KEYS =		"kronos/request/keys";
 
-final int N_LINES = 20;
-final int KRONOS_HEIGHT = 5000;
+/* ----------------------------------------------------------------------------
+ *
+ * CONFIGURATION
+ *
+ * --------------------------------------------------------------------------- */
+
 final int CONTROL_WIDTH = 130;
 final int CONTROL_SPACING = 4;
-
 final String EMPTY = "";
+final int FRAMERATE = 25;
+final int KRONOS_HEIGHT = 5000;
+final int N_LINES = 20;
+final int N_POSITIONS = 7;
+final int POSITION_CONTROL_WIDTH = 70;
 
-final int COLOUR_BG = 	color(1,34,51);
-final int COLOUR_1 = 	color(1,34,51); 		// drive buttons
-final int COLOUR_2 = 	color(3,72,106); 		// go buttons
-final int COLOUR_3 = 	color(231,197,6); 		// set buttons
-final int COLOUR_4 = 	color(249,112,0); 		// set buttons over
+/* ----------------------------------------------------------------------------
+ *
+ * CONFIGURATION: COLOURS
+ *
+ * --------------------------------------------------------------------------- */
+
+final int WHITE = color(255,255,255);
+final int GREY = color(52,52,52);
+final int DARK = color(35,35,35);
+
+/* ----------------------------------------------------------------------------
+ *
+ * GLOBAL DECLARATION
+ *
+ * --------------------------------------------------------------------------- */
 
 ControlP5 cp5;
 OscP5 oscP5;
-NetAddress kronosIP;
 MessagePool messagepool;
+Toggle[] easeToggles = new Toggle[N_POSITIONS];
+
+/* ----------------------------------------------------------------------------
+ *
+ * P5 LIFECYCLE
+ *
+ * --------------------------------------------------------------------------- */
 
 void setup() {
-	size(1024,700);
-	frameRate(25);
-
-	oscP5 = new OscP5(this,12000);
-	//kronosIP = new NetAddress("192.168.1.123",10000);
-	kronosIP = new NetAddress("127.0.0.1",12000);
+	size(1200,700);
+	frameRate(FRAMERATE);
+	oscP5 = new OscP5(this,OSC_RX_PORT);
 	messagepool = new MessagePool(this,N_LINES);
 	cp5 = new ControlP5(this);
-	setupManualDrive();
+	setupGUI();
 }
 
 void draw() {
-	background(COLOUR_BG); 
+	background(0); 
 	messagepool.draw(10,400);
 }
+
+/* ----------------------------------------------------------------------------
+ *
+ * IMPLEMENTATION: OSC
+ *
+ * --------------------------------------------------------------------------- */
 
 void oscEvent(OscMessage m) {
 	String s = m.addrPattern().toUpperCase();
@@ -57,7 +103,6 @@ void oscEvent(OscMessage m) {
 	}
 	messagepool.add(s,true);
 }
-
 
 void oscSend(String address, int payload){
 	OscMessage m = new OscMessage(address);
@@ -72,8 +117,166 @@ void oscSend(String address){
 	messagepool.add(address.toUpperCase(),false);
 }
 
-void addbutton(String f, String label, int colour, int x, int y){
+/* ----------------------------------------------------------------------------
+ *
+ * IMPLEMENTATION: GUI HANDLERS
+ *
+ * --------------------------------------------------------------------------- */
+
+void down1(int v)		{oscSend(OSC_ADDR_GO,1);}
+void down5(int v)		{oscSend(OSC_ADDR_GO,5);}
+void down10(int v)		{oscSend(OSC_ADDR_GO,10);}
+void down50(int v)		{oscSend(OSC_ADDR_GO,50);}
+void down100(int v)		{oscSend(OSC_ADDR_GO,100);}
+void down500(int v)		{oscSend(OSC_ADDR_GO,500);}
+void down1000(int v)	{oscSend(OSC_ADDR_GO,1000);}
+
+void up1(int v)			{oscSend(OSC_ADDR_GO,-1);}
+void up5(int v)			{oscSend(OSC_ADDR_GO,-5);}
+void up10(int v)		{oscSend(OSC_ADDR_GO,-10);}
+void up50(int v)		{oscSend(OSC_ADDR_GO,-50);}
+void up100(int v)		{oscSend(OSC_ADDR_GO,-100);}
+void up500(int v)		{oscSend(OSC_ADDR_GO,-500);}
+void up1000(int v)		{oscSend(OSC_ADDR_GO,-1000);}
+
+void position1go(int v)	{goPosition(1);}
+void position2go(int v)	{goPosition(2);}
+void position3go(int v)	{goPosition(3);}
+void position4go(int v)	{goPosition(4);}
+void position5go(int v)	{goPosition(5);}
+void position6go(int v)	{goPosition(6);}
+
+void goPosition(int pos) {
+	String address = OSC_ADDR_GO_KEY;
+	if (easeToggles[pos].getState()){
+		address = OSC_ADDR_GO_KEY_EASED;
+	}
+	oscSend(address,pos);
+}
+
+/* ----------------------------------------------------------------------------
+ *
+ * IMPLEMENTATION: GUI INITIALISATION
+ *
+ * --------------------------------------------------------------------------- */
+
+void setupGUI(){
+	int x = 600;
+	int y = 40;
+	int spacing = 80;
 	
+	// Home buttons
+	addHome(x,y);
+	x += spacing;
+	
+	// Key positions
+	for (int i=1; i<N_POSITIONS;i++){
+		addPosition(i, (x+spacing*(i-1)),y);
+	}
+
+	// Drive buttons
+	x = 500;
+	y = 8;
+	int vspacing=32;
+	addDriveButton("up1000", "1000 UP",x,y+=vspacing, false);
+	addDriveButton("up500", "500 UP",x,y+=vspacing, false);
+	addDriveButton("up100", "100 UP",x,y+=vspacing, false);
+	addDriveButton("up50", "50 UP",x,y+=vspacing, false);
+	addDriveButton("up10", "10 UP",x,y+=vspacing, false);
+	addDriveButton("up5", "5 UP",x,y+=vspacing, false);
+	addDriveButton("up1", "1 UP",x,y+=vspacing, false);
+	y+=52;
+	addDriveButton("down1", "DOWN 1",x,y+=vspacing, true);
+	addDriveButton("down5", "DOWN 5",x,y+=vspacing, true);
+	addDriveButton("down10", "DOWN 10",x,y+=vspacing, true);
+	addDriveButton("down50", "DOWN 50",x,y+=vspacing, true);
+	addDriveButton("down100", "DOWN 100",x,y+=vspacing, true);
+	addDriveButton("down500", "DOWN 500",x,y+=vspacing, true);
+	addDriveButton("down1000", "DOWN 1000",x,y+=vspacing, true);
+}
+
+void addDriveButton(String name, String label, int x, int y, Boolean rhs){
+	cp5.addButton(name)
+		.setPosition(x,y)
+		.setLabel(label)
+		.setSize(POSITION_CONTROL_WIDTH,30)
+		.setColorForeground(color(120))
+		.setColorActive(color(255))
+		.setColorLabel(color(255))
+	;
+	if (rhs) cp5.getController(name).getCaptionLabel().align(ControlP5.RIGHT, ControlP5.CENTER);
+}
+
+void addGoButton(String name, String label, int x, int y){
+	cp5.addButton(name)
+		.setPosition(x,y)
+		.setLabel(label)
+		.setSize(POSITION_CONTROL_WIDTH,40)
+		.setColorForeground(color(120))
+		.setColorActive(color(255))
+		.setColorLabel(color(255))
+	;
+	cp5.getController(name).getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+}
+
+void addHome(int x, int y){
+	cp5.addButton("sethome")
+		.setPosition(x,y)
+		.setLabel("SET HOME HERE")
+		.setSize(POSITION_CONTROL_WIDTH,40)
+		.setColorForeground(GREY)
+		.setColorBackground(GREY)
+		.setColorActive(WHITE)
+		.setColorLabel(WHITE)
+	;
+	addGoButton("gohome","GO HOME",x,y+550);
+}
+
+void addPosition(int idx, int x, int y){
+	
+	cp5.addSlider("position"+idx)
+		.setPosition(x,y)
+		.setSize(POSITION_CONTROL_WIDTH,500)
+		.setRange(5000,0)
+		.setNumberOfTickMarks(6)
+		.snapToTickMarks(false)
+		.setLabelVisible(false)
+		.setColorTickMark(GREY)
+		.setColorBackground(WHITE)
+		.setColorForeground(DARK)
+		.setColorActive(GREY) 
+	;
+	
+	y+= 550;
+	addGoButton("position" + idx + "go", "position " + idx,x,y);
+
+	y+= 50;
+	Toggle t = cp5.addToggle(getEasingCheckboxName(idx))
+		.setPosition(x,y)
+		.setColorForeground(GREY)
+		.setColorBackground(GREY)
+		.setColorActive(WHITE)
+		.setColorLabel(WHITE)
+		.setSize(10, 10)
+		.setLabel("use easing")
+	;
+	t.getCaptionLabel().align(ControlP5.LEFT, ControlP5.CENTER).setPaddingX(15);
+	easeToggles[idx] = t;
+}
+
+String getEasingCheckboxName(int idx){
+	return "position" + idx + "easing";
+}
+
+/* ----------------------------------------------------------------------------
+ *
+ * OLD VERSION
+ *
+ * --------------------------------------------------------------------------- */
+
+
+void addbutton(String f, String label, int colour, int x, int y){
+	/*
 	
 	Button b = cp5.addButton(f)
 	.setCaptionLabel(label)
@@ -100,7 +303,7 @@ void addbutton(String f, String label, int colour, int x, int y){
 	if (colour==4){
 		b.setColorForeground(COLOUR_3);
 		b.setColorLabel(0);
-	}
+	}*/
 }
 
 void addKFControl(String f, String label, int x, int y){
@@ -205,6 +408,12 @@ void setKF(int which){
 	oscSend(OSC_ADDR_SET_KEY + which, int(cp5.getController("k"+which).getValue()));
 	cp5.saveProperties(("keyframe.properties"));
 }
+
+/* ----------------------------------------------------------------------------
+ *
+ * MESSAGEPOOL
+ *
+ * --------------------------------------------------------------------------- */
 
 public class MessagePool {
 	private Message[] messages;
