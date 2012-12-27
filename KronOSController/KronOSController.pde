@@ -20,7 +20,10 @@ import controlP5.*;
 
 //final kronosIP = new NetAddress("192.168.1.123",10000);
 NetAddress kronosIP = new NetAddress("127.0.0.1",12000);
+NetAddress audioIP = new NetAddress("127.0.0.1",12000);
 final int OSC_RX_PORT = 12000;
+
+final String OSC_ADDR_CUE = 				"audio/cue";
 
 final String OSC_ADDR_GO = 					"kronos/go";
 final String OSC_ADDR_GO_KEY = 				"kronos/key";
@@ -65,6 +68,7 @@ final int DARK = color(35,35,35);
 ControlP5 cp5;
 OscP5 oscP5;
 MessagePool messagepool;
+Toggle[] cueToggles = new Toggle[N_POSITIONS];
 Toggle[] easeToggles = new Toggle[N_POSITIONS];
 
 /* ----------------------------------------------------------------------------
@@ -104,14 +108,22 @@ void oscEvent(OscMessage m) {
 	messagepool.add(s,true);
 }
 
-void oscSend(String address, int payload){
+void oscSendAudioCue(int payload){
+	String address = OSC_ADDR_CUE;
+	OscMessage m = new OscMessage(address);
+	m.add(payload);
+	oscP5.send(m, audioIP);
+	messagepool.add(address.toUpperCase() + " -> " + payload,false);
+}
+
+void oscSendKronos(String address, int payload){
 	OscMessage m = new OscMessage(address);
 	m.add(payload);
 	oscP5.send(m, kronosIP);
 	messagepool.add(address.toUpperCase() + " -> " + payload,false);
 }
 
-void oscSend(String address){
+void oscSendKronos(String address){
 	OscMessage m = new OscMessage(address);
 	oscP5.send(m, kronosIP);
 	messagepool.add(address.toUpperCase(),false);
@@ -123,21 +135,21 @@ void oscSend(String address){
  *
  * --------------------------------------------------------------------------- */
 
-void down1(int v)		{oscSend(OSC_ADDR_GO,1);}
-void down5(int v)		{oscSend(OSC_ADDR_GO,5);}
-void down10(int v)		{oscSend(OSC_ADDR_GO,10);}
-void down50(int v)		{oscSend(OSC_ADDR_GO,50);}
-void down100(int v)		{oscSend(OSC_ADDR_GO,100);}
-void down500(int v)		{oscSend(OSC_ADDR_GO,500);}
-void down1000(int v)	{oscSend(OSC_ADDR_GO,1000);}
+void down1(int v)		{oscSendKronos(OSC_ADDR_GO,1);}
+void down5(int v)		{oscSendKronos(OSC_ADDR_GO,5);}
+void down10(int v)		{oscSendKronos(OSC_ADDR_GO,10);}
+void down50(int v)		{oscSendKronos(OSC_ADDR_GO,50);}
+void down100(int v)		{oscSendKronos(OSC_ADDR_GO,100);}
+void down500(int v)		{oscSendKronos(OSC_ADDR_GO,500);}
+void down1000(int v)	{oscSendKronos(OSC_ADDR_GO,1000);}
 
-void up1(int v)			{oscSend(OSC_ADDR_GO,-1);}
-void up5(int v)			{oscSend(OSC_ADDR_GO,-5);}
-void up10(int v)		{oscSend(OSC_ADDR_GO,-10);}
-void up50(int v)		{oscSend(OSC_ADDR_GO,-50);}
-void up100(int v)		{oscSend(OSC_ADDR_GO,-100);}
-void up500(int v)		{oscSend(OSC_ADDR_GO,-500);}
-void up1000(int v)		{oscSend(OSC_ADDR_GO,-1000);}
+void up1(int v)			{oscSendKronos(OSC_ADDR_GO,-1);}
+void up5(int v)			{oscSendKronos(OSC_ADDR_GO,-5);}
+void up10(int v)		{oscSendKronos(OSC_ADDR_GO,-10);}
+void up50(int v)		{oscSendKronos(OSC_ADDR_GO,-50);}
+void up100(int v)		{oscSendKronos(OSC_ADDR_GO,-100);}
+void up500(int v)		{oscSendKronos(OSC_ADDR_GO,-500);}
+void up1000(int v)		{oscSendKronos(OSC_ADDR_GO,-1000);}
 
 void position1go(int v)	{goPosition(1);}
 void position2go(int v)	{goPosition(2);}
@@ -151,7 +163,8 @@ void goPosition(int pos) {
 	if (easeToggles[pos].getState()){
 		address = OSC_ADDR_GO_KEY_EASED;
 	}
-	oscSend(address,pos);
+	oscSendKronos(address,pos);
+	if (cueToggles[pos].getState()) oscSendAudioCue(pos);
 }
 
 /* ----------------------------------------------------------------------------
@@ -251,17 +264,28 @@ void addPosition(int idx, int x, int y){
 	addGoButton("position" + idx + "go", "position " + idx,x,y);
 
 	y+= 50;
-	Toggle t = cp5.addToggle(getEasingCheckboxName(idx))
+	easeToggles[idx] = makeToggle(getEasingCheckboxName(idx),idx,x,y,"use easing");
+	
+	y+= 15;
+	cueToggles[idx] = makeToggle(getCueCheckboxName(idx),idx,x,y,"cue audio");
+}
+
+Toggle makeToggle(String name, int idx,int x, int y,String label){
+	Toggle t = cp5.addToggle(name)
 		.setPosition(x,y)
 		.setColorForeground(GREY)
 		.setColorBackground(GREY)
 		.setColorActive(WHITE)
 		.setColorLabel(WHITE)
 		.setSize(10, 10)
-		.setLabel("use easing")
+		.setLabel(label)
 	;
 	t.getCaptionLabel().align(ControlP5.LEFT, ControlP5.CENTER).setPaddingX(15);
-	easeToggles[idx] = t;
+	return t;
+}
+
+String getCueCheckboxName(int idx){
+	return "position" + idx + "cue";
 }
 
 String getEasingCheckboxName(int idx){
@@ -375,37 +399,37 @@ void setupManualDrive(){
 	addbutton("fwd500", 	"down 500", 1, col_down_x, y+=25);
 }
 
-void fwd1(int v)	{oscSend(OSC_ADDR_GO,1);}
-void fwd10(int v)	{oscSend(OSC_ADDR_GO,10);}
-void fwd50(int v)	{oscSend(OSC_ADDR_GO,50);}
-void fwd100(int v)	{oscSend(OSC_ADDR_GO,100);}
-void fwd200(int v)	{oscSend(OSC_ADDR_GO,200);}
-void fwd500(int v)	{oscSend(OSC_ADDR_GO,500);}
-void rwd1(int v)	{oscSend(OSC_ADDR_GO,-1);}
-void rwd10(int v)	{oscSend(OSC_ADDR_GO,-10);}
-void rwd50(int v)	{oscSend(OSC_ADDR_GO,-50);}
-void rwd100(int v)	{oscSend(OSC_ADDR_GO,-100);}
-void rwd200(int v)	{oscSend(OSC_ADDR_GO,-200);}
-void rwd500(int v)	{oscSend(OSC_ADDR_GO,-500);}
+void fwd1(int v)	{oscSendKronos(OSC_ADDR_GO,1);}
+void fwd10(int v)	{oscSendKronos(OSC_ADDR_GO,10);}
+void fwd50(int v)	{oscSendKronos(OSC_ADDR_GO,50);}
+void fwd100(int v)	{oscSendKronos(OSC_ADDR_GO,100);}
+void fwd200(int v)	{oscSendKronos(OSC_ADDR_GO,200);}
+void fwd500(int v)	{oscSendKronos(OSC_ADDR_GO,500);}
+void rwd1(int v)	{oscSendKronos(OSC_ADDR_GO,-1);}
+void rwd10(int v)	{oscSendKronos(OSC_ADDR_GO,-10);}
+void rwd50(int v)	{oscSendKronos(OSC_ADDR_GO,-50);}
+void rwd100(int v)	{oscSendKronos(OSC_ADDR_GO,-100);}
+void rwd200(int v)	{oscSendKronos(OSC_ADDR_GO,-200);}
+void rwd500(int v)	{oscSendKronos(OSC_ADDR_GO,-500);}
 void skf1(int v)	{setKF(1);}
 void skf2(int v)	{setKF(2);}
 void skf3(int v)	{setKF(3);}
 void skf4(int v)	{setKF(4);}
 void skf5(int v)	{setKF(5);}
 void skf6(int v)	{setKF(6);}
-void gkf1(int v)	{oscSend(OSC_ADDR_GO_KEY,1);}
-void gkf2(int v)	{oscSend(OSC_ADDR_GO_KEY,2);}
-void gkf3(int v)	{oscSend(OSC_ADDR_GO_KEY,3);}
-void gkf4(int v)	{oscSend(OSC_ADDR_GO_KEY,4);}
-void gkf5(int v)	{oscSend(OSC_ADDR_GO_KEY,5);}
-void gkf6(int v)	{oscSend(OSC_ADDR_GO_KEY,6);}
-void ghome(int v)	{oscSend(OSC_ADDR_GO_HOME);}
-void shome(int v)	{oscSend(OSC_ADDR_SET_HOME);}
-void status(int v)	{oscSend(OSC_ADDR_REQUEST_STATUS);}
-void skeys(int v)	{oscSend(OSC_ADDR_REQUEST_KEYS);}
+void gkf1(int v)	{oscSendKronos(OSC_ADDR_GO_KEY,1);}
+void gkf2(int v)	{oscSendKronos(OSC_ADDR_GO_KEY,2);}
+void gkf3(int v)	{oscSendKronos(OSC_ADDR_GO_KEY,3);}
+void gkf4(int v)	{oscSendKronos(OSC_ADDR_GO_KEY,4);}
+void gkf5(int v)	{oscSendKronos(OSC_ADDR_GO_KEY,5);}
+void gkf6(int v)	{oscSendKronos(OSC_ADDR_GO_KEY,6);}
+void ghome(int v)	{oscSendKronos(OSC_ADDR_GO_HOME);}
+void shome(int v)	{oscSendKronos(OSC_ADDR_SET_HOME);}
+void status(int v)	{oscSendKronos(OSC_ADDR_REQUEST_STATUS);}
+void skeys(int v)	{oscSendKronos(OSC_ADDR_REQUEST_KEYS);}
 
 void setKF(int which){
-	oscSend(OSC_ADDR_SET_KEY + which, int(cp5.getController("k"+which).getValue()));
+	oscSendKronos(OSC_ADDR_SET_KEY + which, int(cp5.getController("k"+which).getValue()));
 	cp5.saveProperties(("keyframe.properties"));
 }
 
