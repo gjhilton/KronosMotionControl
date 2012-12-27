@@ -18,9 +18,14 @@ import controlP5.*;
  *
  * --------------------------------------------------------------------------- */
 
-//final kronosIP = new NetAddress("192.168.1.123",10000);
+/*
+NetAddress kronosIP = new NetAddress("192.168.1.123",10000);
+NetAddress audioIP = new NetAddress("192.168.1.4",10000);
+*/
+
 NetAddress kronosIP = new NetAddress("127.0.0.1",12000);
 NetAddress audioIP = new NetAddress("127.0.0.1",12000);
+
 final int OSC_RX_PORT = 12000;
 
 final String OSC_ADDR_CUE = 				"audio/cue";
@@ -164,7 +169,10 @@ void goPosition(int pos) {
 		address = OSC_ADDR_GO_KEY_EASED;
 	}
 	oscSendKronos(address,pos);
-	if (cueToggles[pos].getState()) oscSendAudioCue(pos);
+
+	if (cueToggles[pos].getState()) {
+		oscSendAudioCue(pos);
+	}
 }
 
 void ghome(int v)	{oscSendKronos(OSC_ADDR_GO_HOME);}
@@ -368,5 +376,5 @@ class Message {
 		timestamp = hour() + ":" + minute() + ":" + second(); 
 		text = _text;
 		incoming = _incoming;
-	} 
+	}
 } 
