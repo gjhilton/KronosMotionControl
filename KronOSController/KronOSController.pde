@@ -99,6 +99,12 @@ void draw() {
 	fill(VERY_DARK);
 	rect(40,40,410,500);
 	messagepool.draw(50,50);
+	for (int i=1; i<N_POSITIONS;i++){
+		fill(255);
+		textAlign(CENTER);
+		int v = int (cp5.getController(getPositionSliderName(i)).getValue());
+		text(v,635+(i*80),30);
+	}
 }
 
 /* ----------------------------------------------------------------------------
@@ -413,6 +419,7 @@ public class MessagePool {
 		}
 	}
 	public void draw(int left, int top){
+		textAlign(LEFT);
 		for (int i = 0; i <size; i++) {
 			if (!messages[i].text.equals(EMPTY)){
 				String str;
