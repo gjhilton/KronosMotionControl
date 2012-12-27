@@ -50,7 +50,7 @@ final int CONTROL_SPACING = 4;
 final String EMPTY = "";
 final int FRAMERATE = 25;
 final int KRONOS_HEIGHT = 5000;
-final int N_LINES = 20;
+final int N_LINES = 35;
 final int N_POSITIONS = 7;
 final int POSITION_CONTROL_WIDTH = 70;
 
@@ -63,6 +63,7 @@ final int POSITION_CONTROL_WIDTH = 70;
 final int WHITE = color(255,255,255);
 final int GREY = color(52,52,52);
 final int DARK = color(35,35,35);
+final int VERY_DARK = color(10,20,20);
 
 /* ----------------------------------------------------------------------------
  *
@@ -92,8 +93,10 @@ void setup() {
 }
 
 void draw() {
-	background(0); 
-	messagepool.draw(10,400);
+	background(0);
+	fill(VERY_DARK);
+	rect(40,40,410,500);
+	messagepool.draw(50,50);
 }
 
 /* ----------------------------------------------------------------------------
