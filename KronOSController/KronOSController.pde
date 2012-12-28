@@ -95,7 +95,7 @@ ControlP5 cp5;
 OscP5 oscP5;
 MessagePool messagepool;
 PFont font = createFont("Inconsolata-dz", 18);
-PFont fontsmall = createFont("Inconsolata-dz", 12);
+PFont fontsmall = createFont("Inconsolata-dz", 11);
 Toggle[] cueToggles = new Toggle[N_POSITIONS];
 Toggle[] easeToggles = new Toggle[N_POSITIONS];
 boolean inited = false;
@@ -119,7 +119,7 @@ void draw() {
 	background(0);
 	fill(BACKGROUND);
 	rect(40,40,410,500);
-	messagepool.draw(50,50);
+	messagepool.draw(50,60);
         textFont(font);
 	for (int i=1; i<N_POSITIONS;i++){
 		fill(YELLOW);
