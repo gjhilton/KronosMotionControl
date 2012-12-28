@@ -62,28 +62,26 @@ final int POSITION_CONTROL_WIDTH = 70;
  * --------------------------------------------------------------------------- */
 
 final int GREY = color(52,52,52);
-final int DARK = color(35,35,35);
-final int VERY_DARK = color(10,20,20);
-
+final int MIDGREY = color(139,141,119);
 final int WHITE = color(255,255,255);
 final int BLACK = color(0,0,0);
 
 final int BACKGROUND = color(17,21,23);
 
-final int ORANGE_LO = color(247,82,10);
-final int ORANGE = color(255,105,3);
+final int ORANGE_LO = color(255, 49, 0);
+final int ORANGE = color(255, 102, 0);
 
-final int YELLOW_LO = color(255,199,0);
-final int YELLOW = color(255,238,0);
+final int YELLOW_LO = color(255, 201, 0);
+final int YELLOW = color(255, 244, 0);
 
-final int GREEN_LO = color(119,222,0);
-final int GREEN = color(174,238,0);
+final int GREEN_LO = color(55, 234, 0);
+final int GREEN = color(149, 249, 0);
 
-final int PINK_LO = color(255,59,119);
-final int PINK = color(255,93,177);
+final int PINK_LO = color(255, 0, 114);
+final int PINK = color(255, 42, 177);
 
-final int BLUE_LO = color(0,121,225);
-final int BLUE = color(1,176,240);
+final int BLUE_LO = color(0, 113, 231);
+final int BLUE = color(0, 176, 246);
 
 final int PURPLE = color(133,0,233);
 
@@ -450,7 +448,7 @@ public class MessagePool {
 					fill(WHITE);
 				} else {
 					str = "TX ";
-					fill(ORANGE);
+					fill(MIDGREY);
 				}
 				applet.text(str + messages[i].timestamp + " " + messages[i].text,left,top);
 			}
