@@ -61,10 +61,25 @@ final int POSITION_CONTROL_WIDTH = 70;
  *
  * --------------------------------------------------------------------------- */
 
-final int WHITE = color(255,255,255);
 final int GREY = color(52,52,52);
 final int DARK = color(35,35,35);
 final int VERY_DARK = color(10,20,20);
+
+final int WHITE = color(255,255,255);
+final int BLACK = color(0,0,0);
+
+final int CONSOLE_BG = color(17,21,23);
+final int CONSOLE_HI = color(255,255,255);
+final int CONSOLE_LO = color(184,184,159);
+
+final int ORANGE_LO = color(247,82,10);
+final int ORANGE = color(255,105,3);
+
+final int YELLOW_LO = color(255,199,0);
+final int YELLOW = color(255,238,0);
+
+final int GREEN_LO = color(255,199,0);
+final int GREEN = color(255,238,0);
 
 /* ----------------------------------------------------------------------------
  *
@@ -96,11 +111,11 @@ void setup() {
 
 void draw() {
 	background(0);
-	fill(VERY_DARK);
+	fill(CONSOLE_BG);
 	rect(40,40,410,500);
 	messagepool.draw(50,50);
 	for (int i=1; i<N_POSITIONS;i++){
-		fill(255);
+		fill(YELLOW);
 		textAlign(CENTER);
 		int v = int (cp5.getController(getPositionSliderName(i)).getValue());
 		text(v,635+(i*80),30);
@@ -261,10 +276,10 @@ void setupGUI(){
 		.setPosition(40,590)
 		.setLabel("SHOW STATUS")
 		.setSize(300,40)
-		.setColorForeground(GREY)
-		.setColorBackground(GREY)
+		.setColorBackground(ORANGE_LO)
+                .setColorForeground(ORANGE)
 		.setColorActive(WHITE)
-		.setColorLabel(WHITE)
+		.setColorLabel(BLACK)
 		.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
 	;
 	
@@ -272,10 +287,10 @@ void setupGUI(){
 		.setPosition(350,590)
 		.setLabel("SHOW POSITIONS")
 		.setSize(95, 40)
-		.setColorForeground(GREY)
-		.setColorBackground(GREY)
-		.setColorActive(WHITE)
-		.setColorLabel(WHITE)
+                .setColorBackground(YELLOW_LO)
+                .setColorForeground(YELLOW)
+                .setColorActive(WHITE)
+                .setColorLabel(BLACK)
 		.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
 	;
 	
@@ -300,9 +315,10 @@ void addGoButton(String name, String label, int x, int y){
 		.setPosition(x,y)
 		.setLabel(label)
 		.setSize(POSITION_CONTROL_WIDTH,40)
-		.setColorForeground(color(120))
+		.setColorForeground(YELLOW)
+                .setColorBackground(YELLOW_LO)
 		.setColorActive(color(255))
-		.setColorLabel(color(255))
+		.setColorLabel(BLACK)
 	;
 	cp5.getController(name).getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 }
@@ -330,8 +346,8 @@ void addPosition(int idx, int x, int y){
 		.snapToTickMarks(false)
 		.setLabelVisible(false)
 		.setColorTickMark(GREY)
-		.setColorBackground(WHITE)
-		.setColorForeground(DARK)
+		.setColorBackground(YELLOW)
+		.setColorForeground(CONSOLE_BG)
 		.setColorActive(GREY)
 		.setTriggerEvent(Slider.RELEASE)
 	;
@@ -349,10 +365,10 @@ void addPosition(int idx, int x, int y){
 Toggle makeToggle(String name, int idx,int x, int y,String label){
 	Toggle t = cp5.addToggle(name)
 		.setPosition(x,y)
-		.setColorForeground(GREY)
-		.setColorBackground(GREY)
-		.setColorActive(WHITE)
-		.setColorLabel(WHITE)
+		.setColorForeground(CONSOLE_BG)
+		.setColorBackground(CONSOLE_BG)
+		.setColorActive(YELLOW_LO)
+		.setColorLabel(YELLOW_LO)
 		.setSize(10, 10)
 		.setLabel(label)
 	;
@@ -393,8 +409,8 @@ public class MessagePool {
 	private Message[] messages;
 	private int size;
 	private PApplet applet;
-	private final int SENT_COLOUR = color(100,100,255);
-	private final int RECEIVED_COLOUR = color(200,200,200);
+	private final int SENT_COLOUR = color(184,184,159);
+	private final int RECEIVED_COLOUR = color(255,255,255);
 	private final int LINEHEIGHT = 14;
 	private final boolean BOTTOM_UP = false;
 	MessagePool (PApplet _applet, int _size) {
@@ -425,10 +441,10 @@ public class MessagePool {
 				String str;
 				if (messages[i].incoming){
 					str = "RX ";
-					fill(RECEIVED_COLOUR);
+					fill(WHITE);
 				} else {
 					str = "TX ";
-					fill(SENT_COLOUR);
+					fill(ORANGE);
 				}
 				applet.text(str + messages[i].timestamp + " " + messages[i].text,left,top);
 			}
