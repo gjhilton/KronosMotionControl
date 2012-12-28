@@ -94,6 +94,8 @@ final int PURPLE = color(133,0,233);
 ControlP5 cp5;
 OscP5 oscP5;
 MessagePool messagepool;
+PFont font = createFont("Inconsolata-dz", 18);
+PFont fontsmall = createFont("Inconsolata-dz", 12);
 Toggle[] cueToggles = new Toggle[N_POSITIONS];
 Toggle[] easeToggles = new Toggle[N_POSITIONS];
 boolean inited = false;
@@ -118,6 +120,7 @@ void draw() {
 	fill(BACKGROUND);
 	rect(40,40,410,500);
 	messagepool.draw(50,50);
+        textFont(font);
 	for (int i=1; i<N_POSITIONS;i++){
 		fill(YELLOW);
 		textAlign(CENTER);
@@ -440,6 +443,7 @@ public class MessagePool {
 	}
 	public void draw(int left, int top){
 		textAlign(LEFT);
+textFont(fontsmall);
 		for (int i = 0; i <size; i++) {
 			if (!messages[i].text.equals(EMPTY)){
 				String str;
