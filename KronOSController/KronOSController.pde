@@ -68,9 +68,7 @@ final int VERY_DARK = color(10,20,20);
 final int WHITE = color(255,255,255);
 final int BLACK = color(0,0,0);
 
-final int CONSOLE_BG = color(17,21,23);
-final int CONSOLE_HI = color(255,255,255);
-final int CONSOLE_LO = color(184,184,159);
+final int BACKGROUND = color(17,21,23);
 
 final int ORANGE_LO = color(247,82,10);
 final int ORANGE = color(255,105,3);
@@ -78,8 +76,16 @@ final int ORANGE = color(255,105,3);
 final int YELLOW_LO = color(255,199,0);
 final int YELLOW = color(255,238,0);
 
-final int GREEN_LO = color(255,199,0);
-final int GREEN = color(255,238,0);
+final int GREEN_LO = color(119,222,0);
+final int GREEN = color(174,238,0);
+
+final int PINK_LO = color(255,59,119);
+final int PINK = color(255,93,177);
+
+final int BLUE_LO = color(0,121,225);
+final int BLUE = color(1,176,240);
+
+final int PURPLE = color(133,0,233);
 
 /* ----------------------------------------------------------------------------
  *
@@ -111,7 +117,7 @@ void setup() {
 
 void draw() {
 	background(0);
-	fill(CONSOLE_BG);
+	fill(BACKGROUND);
 	rect(40,40,410,500);
 	messagepool.draw(50,50);
 	for (int i=1; i<N_POSITIONS;i++){
@@ -287,8 +293,8 @@ void setupGUI(){
 		.setPosition(350,590)
 		.setLabel("SHOW POSITIONS")
 		.setSize(95, 40)
-                .setColorBackground(YELLOW_LO)
-                .setColorForeground(YELLOW)
+                .setColorBackground(ORANGE_LO)
+                .setColorForeground(ORANGE)
                 .setColorActive(WHITE)
                 .setColorLabel(BLACK)
 		.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
@@ -303,21 +309,22 @@ void addDriveButton(String name, String label, int x, int y, Boolean rhs){
 		.setPosition(x,y)
 		.setLabel(label)
 		.setSize(POSITION_CONTROL_WIDTH,30)
-		.setColorForeground(color(120))
-		.setColorActive(color(255))
-		.setColorLabel(color(255))
+		.setColorBackground(rhs ? PINK_LO : BLUE_LO)
+                .setColorForeground(rhs ? PINK : BLUE)
+                .setColorActive(WHITE)
+                .setColorLabel(BLACK)
 	;
 	if (rhs) cp5.getController(name).getCaptionLabel().align(ControlP5.RIGHT, ControlP5.CENTER);
 }
 
-void addGoButton(String name, String label, int x, int y){
+void addGoButton(String name, String label, int x, int y, boolean home){
 	cp5.addButton(name)
 		.setPosition(x,y)
 		.setLabel(label)
 		.setSize(POSITION_CONTROL_WIDTH,40)
-		.setColorForeground(YELLOW)
-                .setColorBackground(YELLOW_LO)
-		.setColorActive(color(255))
+		.setColorForeground(home ? GREEN : YELLOW)
+                .setColorBackground(home ? GREEN_LO : YELLOW_LO)
+		.setColorActive(WHITE)
 		.setColorLabel(BLACK)
 	;
 	cp5.getController(name).getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
@@ -328,12 +335,12 @@ void addHome(int x, int y){
 		.setPosition(x,y)
 		.setLabel("SET HOME HERE")
 		.setSize(POSITION_CONTROL_WIDTH,40)
-		.setColorForeground(GREY)
-		.setColorBackground(GREY)
-		.setColorActive(WHITE)
-		.setColorLabel(WHITE)
+		.setColorForeground(GREEN)
+                .setColorBackground(GREEN_LO)
+    .setColorActive(WHITE)
+    .setColorLabel(BLACK)
 	;
-	addGoButton("ghome","GO HOME",x,y+550);
+	addGoButton("ghome","GO HOME",x,y+550,true);
 }
 
 void addPosition(int idx, int x, int y){
@@ -347,28 +354,29 @@ void addPosition(int idx, int x, int y){
 		.setLabelVisible(false)
 		.setColorTickMark(GREY)
 		.setColorBackground(YELLOW)
-		.setColorForeground(CONSOLE_BG)
+		.setColorForeground(BACKGROUND)
 		.setColorActive(GREY)
 		.setTriggerEvent(Slider.RELEASE)
 	;
 	
 	y+= 550;
-	addGoButton("position" + idx + "go", "position " + idx,x,y);
+	addGoButton("position" + idx + "go", "position " + idx,x,y,false);
 
 	y+= 50;
-	easeToggles[idx] = makeToggle(getEasingCheckboxName(idx),idx,x,y,"use easing");
+	easeToggles[idx] = makeToggle(getEasingCheckboxName(idx),idx,x,y,"use easing",false);
 	
 	y+= 15;
-	cueToggles[idx] = makeToggle(getCueCheckboxName(idx),idx,x,y,"cue audio");
+	cueToggles[idx] = makeToggle(getCueCheckboxName(idx),idx,x,y,"cue audio",true);
 }
 
-Toggle makeToggle(String name, int idx,int x, int y,String label){
-	Toggle t = cp5.addToggle(name)
+Toggle makeToggle(String name, int idx,int x, int y,String label, boolean audio){
+  
+        Toggle t = cp5.addToggle(name)
 		.setPosition(x,y)
-		.setColorForeground(CONSOLE_BG)
-		.setColorBackground(CONSOLE_BG)
-		.setColorActive(YELLOW_LO)
-		.setColorLabel(YELLOW_LO)
+		.setColorForeground(BACKGROUND)
+		.setColorBackground(BACKGROUND)
+		.setColorActive(audio ? PURPLE: YELLOW_LO)
+		.setColorLabel(audio ? PURPLE: YELLOW_LO)
 		.setSize(10, 10)
 		.setLabel(label)
 	;
@@ -409,8 +417,6 @@ public class MessagePool {
 	private Message[] messages;
 	private int size;
 	private PApplet applet;
-	private final int SENT_COLOUR = color(184,184,159);
-	private final int RECEIVED_COLOUR = color(255,255,255);
 	private final int LINEHEIGHT = 14;
 	private final boolean BOTTOM_UP = false;
 	MessagePool (PApplet _applet, int _size) {
