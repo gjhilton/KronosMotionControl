@@ -4,7 +4,7 @@
  *
  * @author		gjhilton
  * @modified	26/12/2012
- * @version		2.0.2
+ * @version		2.0.3
  *
  * --------------------------------------------------------------------------- */
 
@@ -50,7 +50,7 @@ final int CONTROL_WIDTH = 130;
 final int CONTROL_SPACING = 4;
 final String EMPTY = "";
 final int FRAMERATE = 25;
-final int KRONOS_HEIGHT = 5000;
+final int KRONOS_HEIGHT = 4820;
 final int N_LINES = 35;
 final int N_POSITIONS = 7;
 final int POSITION_CONTROL_WIDTH = 70;
@@ -354,7 +354,7 @@ void addPosition(int idx, int x, int y){
 	cp5.addSlider(getPositionSliderName(idx))
 		.setPosition(x,y)
 		.setSize(POSITION_CONTROL_WIDTH,500)
-		.setRange(5000,0)
+		.setRange(KRONOS_HEIGHT,0)
 		.setNumberOfTickMarks(6)
 		.snapToTickMarks(false)
 		.setLabelVisible(false)
