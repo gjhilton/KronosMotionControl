@@ -94,8 +94,8 @@ final int PURPLE = color(133,0,233);
 ControlP5 cp5;
 OscP5 oscP5;
 MessagePool messagepool;
-PFont font = createFont("Inconsolata-dz", 18);
-PFont fontsmall = createFont("Inconsolata-dz", 11);
+PFont font = createFont("MyriadPro-Regular", 16);
+PFont fontsmall = createFont("MyriadPro-Regular", 11);
 Toggle[] cueToggles = new Toggle[N_POSITIONS];
 Toggle[] easeToggles = new Toggle[N_POSITIONS];
 boolean inited = false;
@@ -301,6 +301,8 @@ void setupGUI(){
 		.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
 	;
 	
+        cp5.setFont(fontsmall);
+
 	inited = true;
 	if (AUTOSYNC) syncKFs();
 }
@@ -334,12 +336,13 @@ void addGoButton(String name, String label, int x, int y, boolean home){
 void addHome(int x, int y){
 	cp5.addButton("shome")
 		.setPosition(x,y)
-		.setLabel("SET HOME HERE")
+		.setLabel("HOME HERE")
 		.setSize(POSITION_CONTROL_WIDTH,40)
 		.setColorForeground(GREEN)
                 .setColorBackground(GREEN_LO)
     .setColorActive(WHITE)
     .setColorLabel(BLACK)
+    .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
 	;
 	addGoButton("ghome","GO HOME",x,y+550,true);
 }
@@ -364,7 +367,7 @@ void addPosition(int idx, int x, int y){
 	addGoButton("position" + idx + "go", "position " + idx,x,y,false);
 
 	y+= 50;
-	easeToggles[idx] = makeToggle(getEasingCheckboxName(idx),idx,x,y,"use easing",false);
+	easeToggles[idx] = makeToggle(getEasingCheckboxName(idx),idx,x,y,"use ease",false);
 	
 	y+= 15;
 	cueToggles[idx] = makeToggle(getCueCheckboxName(idx),idx,x,y,"cue audio",true);
