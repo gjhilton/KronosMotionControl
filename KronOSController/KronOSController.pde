@@ -57,9 +57,11 @@ final int POSITION_CONTROL_WIDTH = 70;
 
 /* ----------------------------------------------------------------------------
  *
- * CONFIGURATION: COLOURS
+ * CONFIGURATION: APPEARANCE
  *
  * --------------------------------------------------------------------------- */
+
+final String typeface = "MyriadPro-BoldCond";
 
 final int GREY = color(52,52,52);
 final int MIDGREY = color(139,141,119);
@@ -94,8 +96,8 @@ final int PURPLE = color(133,0,233);
 ControlP5 cp5;
 OscP5 oscP5;
 MessagePool messagepool;
-PFont font = createFont("MyriadPro-BoldCond", 16);
-PFont fontsmall = createFont("MyriadPro-BoldCond", 11);
+PFont font = createFont(typeface, 16);
+PFont fontsmall = createFont(typeface, 11);
 Toggle[] cueToggles = new Toggle[N_POSITIONS];
 Toggle[] easeToggles = new Toggle[N_POSITIONS];
 boolean inited = false;
@@ -282,7 +284,7 @@ void setupGUI(){
 	cp5.addButton("status")
 		.setPosition(40,590)
 		.setLabel("SHOW STATUS")
-		.setSize(300,40)
+		.setSize(200,40)
 		.setColorBackground(ORANGE_LO)
                 .setColorForeground(ORANGE)
 		.setColorActive(WHITE)
@@ -291,9 +293,9 @@ void setupGUI(){
 	;
 	
 		cp5.addButton("skeys")
-		.setPosition(350,590)
+		.setPosition(250,590)
 		.setLabel("SHOW POSITIONS")
-		.setSize(95, 40)
+		.setSize(200, 40)
                 .setColorBackground(ORANGE_LO)
                 .setColorForeground(ORANGE)
                 .setColorActive(WHITE)
