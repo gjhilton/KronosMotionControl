@@ -3,8 +3,8 @@
  * KronOSController
  *
  * @author		gjhilton
- * @modified	26/12/2012
- * @version		2.0.3
+ * @modified	30/12/2012
+ * @version		2.1
  *
  * --------------------------------------------------------------------------- */
 
@@ -18,13 +18,9 @@ import controlP5.*;
  *
  * --------------------------------------------------------------------------- */
 
-/*
-NetAddress kronosIP = new NetAddress("192.168.1.123",10000);
-NetAddress audioIP = new NetAddress("192.168.1.4",10000);
-*/
-
-NetAddress kronosIP = new NetAddress("127.0.0.1",12000);
-NetAddress audioIP = new NetAddress("127.0.0.1",12000);
+// NetAddress kronosIP = 	new NetAddress("192.168.1.123",10000);
+NetAddress kronosIP = 		new NetAddress("127.0.0.1",12000);
+NetAddress audioIP = 		new NetAddress("127.0.0.1",13000);
 
 final int OSC_RX_PORT = 12000;
 
@@ -149,11 +145,11 @@ void oscEvent(OscMessage m) {
 }
 
 void oscSendAudioCue(int payload){
-	String address = OSC_ADDR_CUE;
-	messagepool.add(address.toUpperCase() + " -> " + payload,false);
+	String address = OSC_ADDR_CUE + payload;
 	OscMessage m = new OscMessage(address);
-	m.add(payload);
+	m.add(random(999999)); // HACK osculator doesn't pass on a second identical value to the same address
 	oscP5.send(m, audioIP);
+        messagepool.add(address.toUpperCase() + " -> " + payload,false);
 }
 
 void oscSendKronos(String address, int payload){
